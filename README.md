@@ -1,6 +1,7 @@
 # DASHPasswordManager
 <details>
 <summary markdown="span">prototype implementation</summary>
+	
  - out of scope:
 	 - 
 	 - sharing passwords. (asymmetric cryptography)
