@@ -38,8 +38,8 @@
 	 - concept for the indexing of the data (which branch of the wallet etc.)
 	 - good random number generator / SHA-512, AES-256-CBC implementation
  
- - architecture 
-	 - 
-   - 
+ - architecture
+ 	-
+	- ![alt text](https://github.com/PanzerknackerR/DASHPasswordManager/blob/main/doc/pictures/prototyp_architecture.png)
 
 </details>
