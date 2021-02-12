@@ -40,7 +40,7 @@
  
  - technologie stack
  	- 
-	- ionic with vue 
+	- ionic with vue https://ionicframework.com/docs/vue/overview
 	- https://cryptojs.gitbook.io/docs/ for AES-256-CBC and SHA-512
 	- https://www.npmjs.com/package/dash to connect with Dash and for key derivation and so on
  
