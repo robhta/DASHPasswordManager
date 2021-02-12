@@ -38,6 +38,12 @@
 	 - concept for the indexing of the data (which branch of the wallet etc.)
 	 - good random number generator / SHA-512, AES-256-CBC implementation
  
+ - technologie stack
+ 	- 
+	- ionic with vue 
+	- https://cryptojs.gitbook.io/docs/ for AES-256-CBC and SHA-512
+	- https://www.npmjs.com/package/dash to connect with Dash and for key derivation and so on
+ 
  - architecture
  	-
 	- ![alt text](https://github.com/PanzerknackerR/DASHPasswordManager/blob/main/doc/pictures/prototyp_architecture.png)
