@@ -1,4 +1,6 @@
 # DASHPasswordManager
+npm install -g @ionic/cli@latest native-run cordova-res
+
 <details>
 <summary markdown="span">prototype implementation</summary>
 	
