@@ -20,7 +20,7 @@ We don't know yet why this is causing problems, but simply rebooting 2-3 times h
 	 - 
 	 - store Passwords in Dash Drive
 	 - multi-device access (we implement with Ionic, so we can easily create Android-, IOS-App and Browser Extension)
-	 - fancy GUI, since we work with Vue.
+	 - GUI with react
  - functionalities to be expected:
 	 - 
 	 - store passwords
