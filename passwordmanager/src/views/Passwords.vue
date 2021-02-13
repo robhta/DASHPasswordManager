@@ -29,6 +29,9 @@
 import Dash from "dash";
 import {IonCard, IonCardContent, IonCardTitle, IonCardHeader, IonIcon} from '@ionic/vue';
 import PasswordAdder from "@/components/PasswordAdder";
+import {createIdentity, getAllIdentities} from "../../../persistence/dapi";
+
+require("../../../persistence/dapi.js");
 
 export default {
   name: "Passwords",
@@ -66,11 +69,19 @@ export default {
       ]
     }
   },
-  mounted() {
+  async mounted() {
     this.clientOpts.wallet.mnemonic = this.mnemonic;
     const client = new Dash.Client(this.clientOpts);
 
     if (client !== undefined) {
+      const connection = {
+        platform: client.platform,
+      };
+
+      console.log("fetching identities");
+      const identities = await createIdentity(connection);
+      console.log(identities);
+
       console.log("mnemonic valid! Logged In!");
     } else {
       console.log("mnemonic invalid! Please try again.");
