@@ -8,6 +8,11 @@ ionic serve
 Then problems with eslint may occur, just try a few times.
 We don't know yet why this is causing problems, but simply rebooting 2-3 times helps.
 
+
+
+https://github.com/dashevo/dashcore-lib/blob/master/lib/crypto/random.js
+https://nodejs.org/api/crypto.html
+
 <details>
 <summary markdown="span">prototype implementation</summary>
 	
