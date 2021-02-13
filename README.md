@@ -62,5 +62,6 @@ https://nodejs.org/api/crypto.html
  	-
 	- ![alt text](https://github.com/PanzerknackerR/DASHPasswordManager/blob/main/doc/pictures/prototyp_architecture.png)
 	- ToDo: Component Login
+	- ToDo: Contract Auth_Tag add, because we Use Aes-256-GCM for encyption of file
 
 </details>
