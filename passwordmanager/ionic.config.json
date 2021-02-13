@@ -1,7 +1,0 @@
-{
-  "name": "passwordmanager",
-  "integrations": {
-    "capacitor": {}
-  },
-  "type": "vue"
-}

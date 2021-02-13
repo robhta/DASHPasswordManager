@@ -1,0 +1,7 @@
+{
+  "name": "passwordmananger",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react"
+}
