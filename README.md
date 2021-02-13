@@ -1,5 +1,6 @@
 # DASHPasswordManager
 cd passwordmanager/
+
 npm install -g @ionic/cli@latest native-run cordova-res
 
 npm i -D -E @vue/cli-service
