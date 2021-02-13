@@ -1,38 +1,24 @@
 import React from 'react';
-import {IonButton, IonCard, IonCardContent, IonCardHeader, IonInput, IonItem, IonLabel, IonTitle} from "@ionic/react";
-import * as dapi from '../../../drive-persistence/dapi'
+import {IonButton, IonCard, IonCardContent, IonCardHeader, IonList, IonItem, IonLabel, IonTitle} from "@ionic/react";
+
 
 interface IPasswordsProps{
     callback(state: number): any,
+    entries: Array<any>,
 }
 
 export class Passwords extends React.Component<IPasswordsProps>{
 
-
-    passwords: Array<any>
-
     constructor(props: any) {
         super(props);
 
-        this.passwords = [
-            {
-                user: "DennisO",
-                password: "FirstPassword",
-                note: "pornhub.com"
-            },
-            {
-                user: "Herbert",
-                password: "SecondPassword",
-                note: "Schneesen.de"
-            },
-            {
-                user: "DasBouu",
-                password: "ThirdPassword",
-                note: "someRandom.org"
-            }];
+        this.newPassword = this.newPassword.bind(this);
     }
 
 
+    newPassword(){
+        this.props.callback(0);
+    }
 
     render(){
         return (
@@ -44,12 +30,13 @@ export class Passwords extends React.Component<IPasswordsProps>{
                         </IonTitle>
                     </IonCardHeader>
                     <IonCardContent>
-                        <ul>
-                            {this.passwords.map((value, index) => {
-                                return <li key={index}> {value.note} | {value.user} | {value.password}</li>
+                        <IonList>
+                            {this.props.entries.map((value, index) => {
+
+                                return <IonItem> {value.note} | {value.user} | {value.password}</IonItem>
                             })}
-                        </ul>
-                        <IonButton>
+                        </IonList>
+                        <IonButton onClick={this.newPassword}>
                             New
                         </IonButton>
                     </IonCardContent>

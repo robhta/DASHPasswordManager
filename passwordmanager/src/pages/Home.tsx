@@ -1,8 +1,10 @@
 import {IonContent, IonHeader, IonPage, IonTitle, IonToolbar} from '@ionic/react';
 import Login from '../components/Login';
 import Passwords from "../components/Passwords";
+import NewPassword from "../components/NewPassword"
 import './Home.css';
 import React from "react";
+import * as dapi from '../drive-persistence/dapi'
 
 export class Home extends React.Component{
 
@@ -13,7 +15,13 @@ export class Home extends React.Component{
         edit: boolean
     };
 
-    client: Object;
+    client: any;
+    connection: {
+        platform: Object,
+        identity: Object,
+    };
+
+    entries: Array<any>;
 
     constructor(props: any) {
         super(props);
@@ -25,11 +33,43 @@ export class Home extends React.Component{
             edit: false
         }
         this.client = {};
+        this.connection = {
+            platform: {},
+            identity: {}
+        }
 
-        this.state = {show: true};
+        this.entries = [
+            {
+                user: "DennisO",
+                password: "FirstPassword",
+                note: "pornhub.com"
+            },
+            {
+                user: "Herbert",
+                password: "SecondPassword",
+                note: "Schneesen.de"
+            },
+            {
+                user: "DasBouu",
+                password: "ThirdPassword",
+                note: "someRandom.org"
+            }
+        ];
 
         //Binding functions to this component
         this.callbackParentLogin = this.callbackParentLogin.bind(this);
+        this.callbackParentPasswords = this.callbackParentPasswords.bind(this);
+        this.callbackParentNewPassword = this.callbackParentNewPassword.bind(this);
+        this.initDash = this.initDash.bind(this);
+
+    }
+
+    initDash(){
+        console.log("Init Dash")
+        this.connection.platform = this.client.platform;
+
+        console.log("Fetch Identities");
+        console.log(dapi.getAllIdentities(this.client));
     }
 
     callbackParentLogin(client: any){
@@ -39,11 +79,25 @@ export class Home extends React.Component{
 
         this.forceUpdate();
 
-        console.log(this.view);
+        this.initDash();
     }
 
-    callbackParentPasswords(state: number){
+    callbackParentPasswords(){
+        this.view.passwords = false;
+        this.view.new = true;
 
+        this.forceUpdate();
+    }
+
+    callbackParentNewPassword(entry : any){
+        this.view.passwords = true;
+        this.view.new = false;
+
+        this.entries.push(entry);
+
+        //TODO: Do crypto and push to drive
+
+        this.forceUpdate();
     }
 
     render(){
@@ -61,7 +115,8 @@ export class Home extends React.Component{
                         </IonToolbar>
                     </IonHeader>
                     {this.view.login && <Login callback={this.callbackParentLogin}/>}
-                    {this.view.passwords && <Passwords callback={this.callbackParentLogin}/>}
+                    {this.view.passwords && <Passwords callback={this.callbackParentPasswords} entries={this.entries}/>}
+                    {this.view.new && <NewPassword callback={this.callbackParentNewPassword}/>}
                 </IonContent>
             </IonPage>
         );

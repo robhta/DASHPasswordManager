@@ -49,7 +49,7 @@ export class Login extends React.Component<ILoginProps>{
         console.log("Logged in. Mnemonic is valid.")
         console.log(client);
 
-        this.props.callback(this.mnemonic);
+        this.props.callback(client);
     }
 
     mnemonicChanged(event: any){
