@@ -1,6 +1,11 @@
 # DASHPasswordManager
 npm install -g @ionic/cli@latest native-run cordova-res
 
+npm i -D -E @vue/cli-service
+
+Then problems with eslint may occur, just try a few times.
+We don't know yet why this is causing problems, but simply rebooting 2-3 times helps.
+
 <details>
 <summary markdown="span">prototype implementation</summary>
 	
