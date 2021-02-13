@@ -1,12 +1,17 @@
 # DASHPasswordManager
 cd passwordmanager/
 
-npm install -g @ionic/cli@latest native-run cordova-res
+npm install
 
-npm i -D -E @vue/cli-service
+ionic serve
 
 Then problems with eslint may occur, just try a few times.
 We don't know yet why this is causing problems, but simply rebooting 2-3 times helps.
+
+
+
+https://github.com/dashevo/dashcore-lib/blob/master/lib/crypto/random.js
+https://nodejs.org/api/crypto.html
 
 <details>
 <summary markdown="span">prototype implementation</summary>
@@ -20,7 +25,7 @@ We don't know yet why this is causing problems, but simply rebooting 2-3 times h
 	 - 
 	 - store Passwords in Dash Drive
 	 - multi-device access (we implement with Ionic, so we can easily create Android-, IOS-App and Browser Extension)
-	 - fancy GUI, since we work with Vue.
+	 - GUI with react
  - functionalities to be expected:
 	 - 
 	 - store passwords
@@ -56,5 +61,7 @@ We don't know yet why this is causing problems, but simply rebooting 2-3 times h
  - architecture
  	-
 	- ![alt text](https://github.com/PanzerknackerR/DASHPasswordManager/blob/main/doc/pictures/prototyp_architecture.png)
+	- ToDo: Component Login
+	- ToDo: Contract Auth_Tag add, because we Use Aes-256-GCM for encyption of file
 
 </details>
