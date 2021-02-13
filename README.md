@@ -56,5 +56,6 @@ We don't know yet why this is causing problems, but simply rebooting 2-3 times h
  - architecture
  	-
 	- ![alt text](https://github.com/PanzerknackerR/DASHPasswordManager/blob/main/doc/pictures/prototyp_architecture.png)
+	- ToDo: Component Login
 
 </details>
