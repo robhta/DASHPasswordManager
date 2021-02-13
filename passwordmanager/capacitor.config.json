@@ -1,6 +1,6 @@
 {
   "appId": "io.ionic.starter",
-  "appName": "passwordmananger",
+  "appName": "passwordmanager",
   "bundledWebRuntime": false,
   "npmClient": "npm",
   "webDir": "build",

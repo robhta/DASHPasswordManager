@@ -1,5 +1,5 @@
 {
-  "name": "passwordmananger",
+  "name": "passwordmanager",
   "integrations": {
     "capacitor": {}
   },
