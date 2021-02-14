@@ -22,7 +22,7 @@ cd passwordmanager/
 ionic build
 ionic cap add android
 
-add in ioinc.config.json path of android studio like: " "linuxAndroidStudioPath": "/snap/android-studio/current/android-studio/bin/studio.sh", "
+add in capacitor.config.json path of android studio like: " "linuxAndroidStudioPath": "/snap/android-studio/current/android-studio/bin/studio.sh", "
 ionic cap open android
 
 <details>
