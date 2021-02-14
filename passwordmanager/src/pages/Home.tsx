@@ -17,7 +17,7 @@ export class Home extends React.Component{
 
     client: any;
     connection: {
-        platform: Object,
+        platform: any,
         identity: Object,
     };
 
@@ -38,6 +38,7 @@ export class Home extends React.Component{
             identity: {}
         }
 
+        // Dummi-Data
         this.entries = [
             {
                 user: "DennisO",
@@ -64,14 +65,39 @@ export class Home extends React.Component{
 
     }
 
-    initDash(){
-        console.log("Init Dash")
+    /**
+     * Before getting all encrypted passwords, we need all connection information.
+     * Therefore this function will set up all required information in the connection object
+     * for further usage.
+     */
+    async initDash() {
+        console.log("start init Dash")
         this.connection.platform = this.client.platform;
+        let identity = null;
 
         console.log("Fetch Identities");
-        console.log(dapi.getAllIdentities(this.client));
+        let identities = await dapi.getAllIdentities(this.client);
+        if(identities !== null ){
+            console.log("Found:");
+            console.log(identities);
+            identity = identities[0];
+
+            console.log("Use identity:");
+            console.log(identity);
+        }else{
+            console.log("No identities found. Create a new one for you");
+            identity = await dapi.createIdentity(this.connection);
+            identity = identity.getId().toString();
+            console.log("Your new identity: ");
+            console.log(identity);
+        }
+        console.log("Resolve identity string to dash identity");
+        this.connection.identity = await this.connection.platform.identities.get(identity);
+        console.log(this.connection)
+        console.log("Required connection information retrieved");
     }
 
+    // Callback functions for children -> parent communication
     callbackParentLogin(client: any){
         this.client = client;
         this.view.login = false;
@@ -79,7 +105,7 @@ export class Home extends React.Component{
 
         this.forceUpdate();
 
-        this.initDash();
+        this.initDash().then(r => console.log("init dash finished"));
     }
 
     callbackParentPasswords(){
