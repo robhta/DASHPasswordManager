@@ -8,6 +8,13 @@ import {
     getAllIdentities as _getAllIdentities
 } from "./identityDAO";
 
+import {
+    getAllEntries as _getAllEntries,
+    getEntryByIndex as _getEntryByIndex,
+    createNewEntry as _createNewEntry,
+    deleteEntry as _deleteEntry
+} from "./passwordDAO"
+
 
 
 // Identity
@@ -17,3 +24,10 @@ export const createDpnsName = _createDpnsName;
 export const findIdentityByName = _findIdentityByName;
 export const getIdentityBalance = _getIdentityBalance;
 export const getAllIdentities = _getAllIdentities;
+
+
+//Passwords
+export const getAllEntries = _getAllEntries;
+export const getEntryByIndex = _getEntryByIndex;
+export const createNewEntry = _createNewEntry;
+export const deleteEntry = _deleteEntry;
