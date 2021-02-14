@@ -61,6 +61,7 @@ export class Home extends React.Component{
         this.callbackParentLogin = this.callbackParentLogin.bind(this);
         this.callbackParentPasswords = this.callbackParentPasswords.bind(this);
         this.callbackParentNewPassword = this.callbackParentNewPassword.bind(this);
+        this.callbackParentPasswordDelete = this.callbackParentPasswordDelete.bind(this);
         this.initDash = this.initDash.bind(this);
 
     }
@@ -115,6 +116,17 @@ export class Home extends React.Component{
         this.forceUpdate();
     }
 
+    callbackParentPasswordDelete(index: number){
+        dapi.
+
+        this.entries = this.entries.filter(function(item, i){
+            return i !== index;
+        });
+
+        this.forceUpdate();
+    }
+
+
     callbackParentNewPassword(entry : any){
         this.view.passwords = true;
         this.view.new = false;
@@ -141,7 +153,7 @@ export class Home extends React.Component{
                         </IonToolbar>
                     </IonHeader>
                     {this.view.login && <Login callback={this.callbackParentLogin}/>}
-                    {this.view.passwords && <Passwords callback={this.callbackParentPasswords} entries={this.entries}/>}
+                    {this.view.passwords && <Passwords callbackDelete={this.callbackParentPasswordDelete} callback={this.callbackParentPasswords} entries={this.entries}/>}
                     {this.view.new && <NewPassword callback={this.callbackParentNewPassword}/>}
                 </IonContent>
             </IonPage>
