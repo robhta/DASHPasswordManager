@@ -33,7 +33,7 @@ export class Passwords extends React.Component<IPasswordsProps>{
                         <IonList>
                             {this.props.entries.map((value, index) => {
 
-                                return <IonItem> {value.note} | {value.user} | {value.password}</IonItem>
+                                return <IonItem key={index}> {value.note} | {value.user} | {value.password}</IonItem>
                             })}
                         </IonList>
                         <IonButton onClick={this.newPassword}>
