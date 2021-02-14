@@ -73,6 +73,5 @@
  - architecture
  	-
 	- ![alt text](https://github.com/PanzerknackerR/DASHPasswordManager/blob/main/doc/pictures/prototyp_architecture.png)
-	- ToDo: Component Login
 
 </details>
