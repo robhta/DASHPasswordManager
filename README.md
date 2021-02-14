@@ -19,6 +19,7 @@
 	- ionic build
 	- add in capacitor.config.json path of android studio like: "linuxAndroidStudioPath": "/snap/android-studio/current/android-studio/bin/studio.sh",
 	- ionic cap add android
+	- ionic cap open android
 	- then android studio will be open and you can start the app on your device or emulator of choice
 
 </details>
