@@ -14,6 +14,15 @@ https://nodejs.org/api/crypto.html
 
 https://ionicframework.com/docs/react/quickstart
 
+Build App:
+
+npm install
+
+cd passwordmanager/
+ionic build
+ionic cap add android
+ionic cap open android
+
 <details>
 <summary markdown="span">prototype implementation</summary>
 	
