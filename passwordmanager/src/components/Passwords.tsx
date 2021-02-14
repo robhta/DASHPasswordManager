@@ -11,10 +11,12 @@ import {
     IonTextarea,
     IonFab,
     IonFabButton,
-    IonIcon
+    IonIcon,
+    IonInput,
+    IonGrid, IonRow, IonCol
 } from "@ionic/react";
 
-import { trash } from 'ionicons/icons';
+import { trash, eye } from 'ionicons/icons';
 
 
 
@@ -24,13 +26,24 @@ interface IPasswordsProps {
     entries: Array<any>,
 }
 
+
 export class Passwords extends React.Component<IPasswordsProps> {
+    inputs : any;
+
 
     constructor(props: any) {
         super(props);
 
+        this.inputs = [];
+
+
+
+
+
         this.newPassword = this.newPassword.bind(this);
         this.deletePassword = this.deletePassword.bind(this);
+        this.showPassword = this.showPassword.bind(this);
+        this.test = this.test.bind(this);
     }
 
 
@@ -41,6 +54,14 @@ export class Passwords extends React.Component<IPasswordsProps> {
     deletePassword(index: number){
         console.log(index);
         this.props.callbackDelete(index);
+    }
+
+    showPassword(){
+        console.log(this);
+    }
+
+    test(element: any){
+        console.log(element);
     }
 
     render() {
@@ -69,11 +90,8 @@ export class Passwords extends React.Component<IPasswordsProps> {
                                     </IonTextarea>
 
                                     <IonLabel position="stacked">Password</IonLabel>
-                                    <IonTextarea
-                                        readonly
-                                        value={value.password}>
-                                    </IonTextarea>
-                                    <br/>
+                                    <IonInput  value={value.password} placeholder="Enter Number" readonly ref={this.test}/>
+
                                     <IonFab vertical="bottom" horizontal="end" >
                                         <IonFabButton onClick={() => this.deletePassword(index)}>
                                             <IonIcon icon={trash} />

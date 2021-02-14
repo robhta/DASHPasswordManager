@@ -116,8 +116,8 @@ export class Home extends React.Component{
         this.forceUpdate();
     }
 
-    callbackParentPasswordDelete(index: number){
-        dapi.
+    async callbackParentPasswordDelete(index: number){
+        await dapi.deleteEntry(this.connection, index);
 
         this.entries = this.entries.filter(function(item, i){
             return i !== index;
