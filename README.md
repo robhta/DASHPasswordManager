@@ -2,29 +2,26 @@
 
 <details>
 <summary markdown="span">run the app</summary>
+	
 - run inside your browser:
 	-
+	- you need a terminal oder an IDE like webstom, where you have opened to projekt directory
 	- cd passwordmanager/
 	- npm install
 	- ionic serve
+	
 - run on your phone (only android is considered now):
 	-
 	- you need to have a working android studio environment on your pc
-	- you need a terminal oder another IDE like webstom, where you have opened to projekt directory
+	- you need a terminal oder an IDE like webstom, where you have opened to projekt directory
 	- cd passwordmanager/
 	- npm install (if you dont have done it before)
 	- ionic build
+	- add in capacitor.config.json path of android studio like: "linuxAndroidStudioPath": "/snap/android-studio/current/android-studio/bin/studio.sh",
 	- ionic cap add android
 	- then android studio will be open and you can start the app on your device or emulator of choice
-</details>
-Build App:
-cd passwordmanager/
-npm install
-ionic build
-ionic cap add android
 
-add in capacitor.config.json path of android studio like: " "linuxAndroidStudioPath": "/snap/android-studio/current/android-studio/bin/studio.sh", "
-ionic cap open android
+</details>
 
 <details>
 <summary markdown="span">prototype implementation</summary>
