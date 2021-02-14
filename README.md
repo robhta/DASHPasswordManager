@@ -1,24 +1,25 @@
 # DASHPasswordManager
-cd passwordmanager/
 
-npm install
-
-ionic serve
-
-Then problems with eslint may occur, just try a few times.
-We don't know yet why this is causing problems, but simply rebooting 2-3 times helps.
-
-
-
-https://nodejs.org/api/crypto.html
-
-https://ionicframework.com/docs/react/quickstart
-
+<details>
+<summary markdown="span">run the app</summary>
+- run inside your browser:
+	-
+	- cd passwordmanager/
+	- npm install
+	- ionic serve
+- run on your phone (only android is considered now):
+	-
+	- you need to have a working android studio environment on your pc
+	- you need a terminal oder another IDE like webstom, where you have opened to projekt directory
+	- cd passwordmanager/
+	- npm install (if you dont have done it before)
+	- ionic build
+	- ionic cap add android
+	- then android studio will be open and you can start the app on your device or emulator of choice
+</details>
 Build App:
-
-npm install
-
 cd passwordmanager/
+npm install
 ionic build
 ionic cap add android
 
@@ -66,8 +67,8 @@ ionic cap open android
  
  - technologie stack
  	- 
-	- ionic with vue https://ionicframework.com/docs/vue/overview
-	- https://cryptojs.gitbook.io/docs/ for AES-256-CBC and SHA-512
+	- ionic with react https://ionicframework.com/docs/react/quickstart
+	- https://nodejs.org/api/crypto.html for crypto and rng (also trezor linked this lib in their slip-16)
 	- https://www.npmjs.com/package/dash to connect with Dash and for key derivation and so on
  
  - architecture
