@@ -10,8 +10,9 @@ We don't know yet why this is causing problems, but simply rebooting 2-3 times h
 
 
 
-https://github.com/dashevo/dashcore-lib/blob/master/lib/crypto/random.js
 https://nodejs.org/api/crypto.html
+
+https://ionicframework.com/docs/react/quickstart
 
 <details>
 <summary markdown="span">prototype implementation</summary>
