@@ -48,12 +48,14 @@
 		 - derive symmetric key using sha-512
 		 - fill the payload so that it can be AES encrypted
 		 - use a random number generator to generate an input vector
-		 - symmetric encryption using AES-256-CBC
+		 - symmetric encryption using AES-256-CBC for deriving a symmetric key 
+		 - symmetric encryption using AES-256-GCM for contract encryption
  - data contract:
 	 - 
 	 - owner: to reference data (is implicitly given)
 	 - index: for identifying the path for the key.
-	 - input vector: for AES-256-CBC
+	 - input vector: for AES-256-GCM
+	 - authentication Tag: for AES-256-GCM
 	 - encrypted payload
 	 
  - problems we need to address:
@@ -72,6 +74,5 @@
  	-
 	- ![alt text](https://github.com/PanzerknackerR/DASHPasswordManager/blob/main/doc/pictures/prototyp_architecture.png)
 	- ToDo: Component Login
-	- ToDo: Contract Auth_Tag add, because we Use Aes-256-GCM for encyption of file
 
 </details>
