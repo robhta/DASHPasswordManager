@@ -5,7 +5,7 @@
 	
 - run inside your browser:
 	-
-	- you need a terminal oder an IDE like webstom, where you have opened to projekt directory
+	- you need a terminal or an IDE like webstom, where you have opened to projekt directory
 	- cd passwordmanager/
 	- npm install
 	- ionic serve
@@ -13,7 +13,7 @@
 - run on your phone (only android is considered now):
 	-
 	- you need to have a working android studio environment on your pc
-	- you need a terminal oder an IDE like webstom, where you have opened to projekt directory
+	- you need a terminal or an IDE like webstom, where you have opened to projekt directory
 	- cd passwordmanager/
 	- npm install (if you dont have done it before)
 	- ionic build
