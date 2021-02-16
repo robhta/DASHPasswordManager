@@ -7,7 +7,7 @@ const Dash = require('dash');
 
 //For passing props
 interface ILoginProps{
-    callback(client: Object): any,
+    callback(client: Object, mnemonic: string): any,
 }
 
 export class Login extends React.Component<ILoginProps>{
@@ -34,7 +34,7 @@ export class Login extends React.Component<ILoginProps>{
             },
             apps: {
                 passwordManager: {
-                    contractId: '7m3ZYqYUyJpYUYbPAgWNBP2fcW6agLRxP9U2c6xfjpGV'
+                    contractId: '7HCszNLrYbZDFzK27eCzNGdgm8x4mkp5DkfTZ5wpGCkH'
                 },
             }
         }
@@ -52,7 +52,7 @@ export class Login extends React.Component<ILoginProps>{
         console.log("Logged in. Mnemonic is valid.")
         console.log(client);
 
-        this.props.callback(client);
+        this.props.callback(client, this.clientOpts.wallet.mnemonic);
     }
 
     mnemonicChanged(event: any){

@@ -26,9 +26,9 @@ export async function getEntryByIndex(connection, index){
 export async function createNewEntry(connection, entry){
     const doc_properties = {
         index: entry.index,
-        inputVector: entry.inputVector,
-        authenticationTag: entry.authenticationTag,
-        payload: entry.payload
+        inputVector: entry.iv,
+        authenticationTag: entry.authTag,
+        payload: Buffer.from(entry.payload)
     };
 
     console.log("Start creating a new entry on drive");

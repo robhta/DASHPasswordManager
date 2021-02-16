@@ -5,6 +5,8 @@ import NewPassword from "../components/NewPassword"
 import './Home.css';
 import React from "react";
 import * as dapi from '../drive-persistence/dapi'
+import * as pwdManager from '../cryptography/pwdManager'
+import * as keyManager from '../keymanagement/keyderivation'
 
 export class Home extends React.Component{
 
@@ -16,6 +18,7 @@ export class Home extends React.Component{
     };
 
     client: any;
+    mnemonic: string;
     connection: {
         platform: any,
         identity: Object,
@@ -33,6 +36,7 @@ export class Home extends React.Component{
             edit: false
         }
         this.client = {};
+        this.mnemonic = "";
         this.connection = {
             platform: {},
             identity: {}
@@ -109,10 +113,11 @@ export class Home extends React.Component{
     }
 
     // Callback functions for children -> parent communication
-    callbackParentLogin(client: any){
+    callbackParentLogin(client: any, mnemonic: string){
         this.client = client;
         this.view.login = false;
         this.view.passwords = true;
+        this.mnemonic = mnemonic;
 
         this.forceUpdate();
 
@@ -139,13 +144,21 @@ export class Home extends React.Component{
     }
 
 
-    callbackParentNewPassword(entry : any){
+    async callbackParentNewPassword(entry : any){
         this.view.passwords = true;
         this.view.new = false;
 
         this.entries.push(entry);
 
         //TODO: Do crypto and push to drive
+        const privateKey = keyManager.getHDWalletHardendKey(this.mnemonic, "",0, 1);
+        console.log("private key")
+        console.log(privateKey)
+        const symKey = pwdManager.getKey(privateKey);
+        let payload = pwdManager.fileLevelEncrytion(symKey, entry.toString());
+        payload.index = 0; //TODO: care about index
+
+        await dapi.createNewEntry(this.connection, payload);
 
         this.forceUpdate();
     }
