@@ -33,6 +33,9 @@ export class Login extends React.Component<ILoginProps>{
                 mnemonic: "",
             },
             apps: {
+                passwordManager: {
+                    contractId: '7m3ZYqYUyJpYUYbPAgWNBP2fcW6agLRxP9U2c6xfjpGV'
+                },
             }
         }
 

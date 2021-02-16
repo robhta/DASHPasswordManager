@@ -96,6 +96,16 @@ export class Home extends React.Component{
         this.connection.identity = await this.connection.platform.identities.get(identity);
         console.log(this.connection)
         console.log("Required connection information retrieved");
+
+        console.log("Uploading testcase.")
+        const entry = {
+            index: 0,
+            inputVector: Buffer.from("Hallo"),
+            authenticationTag: Buffer.from("Hallo"),
+            payload: Buffer.from("Hallo")
+        };
+        console.log(await dapi.createNewEntry(this.connection, entry));
+        console.log("Uploaded");
     }
 
     // Callback functions for children -> parent communication
@@ -116,8 +126,10 @@ export class Home extends React.Component{
         this.forceUpdate();
     }
 
+
     async callbackParentPasswordDelete(index: number){
         await dapi.deleteEntry(this.connection, index);
+
 
         this.entries = this.entries.filter(function(item, i){
             return i !== index;
