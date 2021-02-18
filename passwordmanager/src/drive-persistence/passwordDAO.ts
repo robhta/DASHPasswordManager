@@ -3,8 +3,22 @@
  * @param connection
  * @returns {Promise<void>}
  */
-export async function getAllEntries(connection){
+export async function getAllEntries(connection: any) : Promise<any>{
+    try {
+        const documents = await connection.platform.documents.get(
+            'passwordManager.passwordmanager',
+            {
+                where: [
+                    ['$ownerId', "==", connection.identity.getId().toString()]
+                ],
+            },
+        );
 
+        return documents
+
+    } catch (e) {
+        console.error('Something went wrong:', e);
+    }
 }
 
 /**
@@ -13,7 +27,7 @@ export async function getAllEntries(connection){
  * @param index
  * @returns {Promise<void>}
  */
-export async function getEntryByIndex(connection, index){
+export async function getEntryByIndex(connection: any, index: number): Promise<any>{
 
 }
 
@@ -23,7 +37,7 @@ export async function getEntryByIndex(connection, index){
  * @param entry
  * @returns {Promise<void>}
  */
-export async function createNewEntry(connection, entry){
+export async function createNewEntry(connection: any, entry: any): Promise<any>{
     const doc_properties = {
         index: entry.index,
         inputVector: entry.iv,
@@ -58,6 +72,6 @@ export async function createNewEntry(connection, entry){
  * @param index
  * @returns {Promise<void>}
  */
-export async function deleteEntry(connection, index){
+export async function deleteEntry(connection: any, index: number){
 
 }

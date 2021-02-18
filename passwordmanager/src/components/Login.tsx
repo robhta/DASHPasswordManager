@@ -25,12 +25,12 @@ export class Login extends React.Component<ILoginProps>{
     constructor(props:any) {
         super(props);
 
-        this.mnemonic = "";
+        this.mnemonic = "moment embody rural position pepper boat aunt frost today bulb wrap inhale"; //TODO: change default value!
 
         this.clientOpts = {
             network: 'testnet',
             wallet: {
-                mnemonic: "",
+                mnemonic: "moment embody rural position pepper boat aunt frost today bulb wrap inhale", //TODO: change default value!
             },
             apps: {
                 passwordManager: {

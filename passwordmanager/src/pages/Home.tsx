@@ -8,6 +8,10 @@ import * as dapi from '../drive-persistence/dapi'
 import * as pwdManager from '../cryptography/pwdManager'
 import * as keyManager from '../keymanagement/keyderivation'
 
+import { Plugins } from '@capacitor/core';
+
+const { Storage } = Plugins;
+
 export class Home extends React.Component{
 
     view: {
@@ -81,6 +85,7 @@ export class Home extends React.Component{
         let identity = null;
 
         console.log("Fetch Identities");
+        /*
         let identities = await dapi.getAllIdentities(this.client);
         if(identities !== null ){
             console.log("Found:");
@@ -96,20 +101,46 @@ export class Home extends React.Component{
             console.log("Your new identity: ");
             console.log(identity);
         }
+
+         */
+
+/*        let a = await this.setObject();
+        let b = await this.getObject();
+        let c = await this.setItem();
+        console.log("AUSGABEN:")
+        console.log(Storage);
+        console.log(Storage.set({
+            key: "hallo",
+            value: "sd"
+        }));
+        console.log(Storage.get({ key: "hallo"}));*/
+
+        //Fetch all local stored Entries
+        let keys = await Storage.keys();
+        console.log(keys);
+        for(let key in keys){
+            this.entries.push(await Storage.get({key: key}));
+        }
+        this.forceUpdate();
+
         console.log("Resolve identity string to dash identity");
-        this.connection.identity = await this.connection.platform.identities.get(identity);
+        this.connection.identity = await this.connection.platform.identities.get("EXGyWgmND3avy94A3f8nF9mWWGEcvqaw8mtgwpu2QCNw"); //TODO: default Value change!
         console.log(this.connection)
         console.log("Required connection information retrieved");
 
-        console.log("Uploading testcase.")
-        const entry = {
-            index: 0,
-            inputVector: Buffer.from("Hallo"),
-            authenticationTag: Buffer.from("Hallo"),
-            payload: Buffer.from("Hallo")
-        };
-        console.log(await dapi.createNewEntry(this.connection, entry));
-        console.log("Uploaded");
+
+
+
+        await this.fetchingAllPasswords();
+    }
+
+
+    async fetchingAllPasswords(){
+        console.log("fetch pws:");
+        let passwords = await dapi.getAllEntries(this.connection);
+
+        console.log(passwords);
+
     }
 
     // Callback functions for children -> parent communication
@@ -151,13 +182,22 @@ export class Home extends React.Component{
         this.entries.push(entry);
 
         //TODO: Do crypto and push to drive
-        const privateKey = keyManager.getHDWalletHardendKey(this.mnemonic, "",0, 1);
+        const privateKey = keyManager.getHDWalletHardendKey(this.mnemonic, "",1, 1);
         console.log("private key")
         console.log(privateKey)
         const symKey = pwdManager.getKey(privateKey);
         let payload = pwdManager.fileLevelEncrytion(symKey, entry.toString());
         payload.index = 0; //TODO: care about index
 
+        //Store all new Entrys to Local Storage
+        await Storage.set({
+            key: payload.index.toString(),
+            value: JSON.stringify({ payload : payload.payload,
+                iv : payload.iv,
+                authTag : payload.authTag,
+            })
+        });
+        //Store all new Entrys to Dapi Storage
         await dapi.createNewEntry(this.connection, payload);
 
         this.forceUpdate();
