@@ -60,7 +60,7 @@
 	 - encrypted payload
 	 - contractId: 7m3ZYqYUyJpYUYbPAgWNBP2fcW6agLRxP9U2c6xfjpGV
 	 ```
-{
+	{
                 "passwordmanager": {
                         "indices": [
                                 {
