@@ -60,49 +60,50 @@
 	 - encrypted payload
 	 - contractId: 7m3ZYqYUyJpYUYbPAgWNBP2fcW6agLRxP9U2c6xfjpGV
 	 ```
-	 {
-		"passwordmanager": {
-			"indices": [
-				{
-					"properties": [
-						{"index": "asc"}
-					],
-					"unique": true
-				},
-				{
-					"properties": [
-						{"$ownerId": "asc"}
-					]
-				}
-			],
-			"properties": {
-				"inputVector": {
-					"type": "array",
-					"byteArray": true,
-					"minItems": 30,
-					"maxItems": 40
-				},
-				"authenticationTag": {
-					"type": "array",
-					"byteArray": true,
-					"minItems": 30,
-					"maxItems": 40
-				},
-				"payload":{
-					"type": "array",
-					"byteArray": true,
-					"minItems": 30,
-					"maxItems": 40
-				},
-				"index": {
-					"type": "integer",
-					"minimum": 0
-				}
-			},
-			"additionalProperties": false,
-			"required": ["index", "inputVector", "authenticationTag", "payload"]
-		}
-	}
+{
+                "passwordmanager": {
+                        "indices": [
+                                {
+                                        "properties": [
+                                                {"index": "asc"}
+                                        ],
+                                        "unique": true
+                                },
+                                {
+                                        "properties": [
+                                                {"$ownerId": "asc"}
+                                        ]
+                                }
+                        ],
+                        "properties": {
+                                "inputVector": {
+                                        "type": "array",
+                                        "byteArray": true,
+                                        "minItems": 12,
+                                        "maxItems": 12
+                                },
+                                "authenticationTag": {
+                                        "type": "array",
+                                        "byteArray": true,
+                                        "minItems": 16,
+                                        "maxItems": 16
+                                },
+                                "payload":{
+                                        "type": "array",
+                                        "byteArray": true,
+                                        "minItems": 15,
+                                        "maxItems": 150
+                                },
+                                "index": {
+                                        "type": "integer",
+                                        "minimum": 0,
+                                        "maximum": 2147483000
+                                }
+                        },
+                        "additionalProperties": false,
+                        "required": ["index", "inputVector", "authenticationTag", "payload"]
+                }
+        }
 	 ```
 	 
  - problems we need to address:
