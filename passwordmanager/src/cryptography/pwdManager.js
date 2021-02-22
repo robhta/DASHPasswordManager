@@ -48,6 +48,18 @@ export function fileLevelEncrytion(key, payload){
 
 //Decrytion of an File, here we need some more Information, because we use AES-256-GCM
 export function fileLevelDecrytion(aes_key, payload, authTag, aes_iv){
+    console.log("AES KEY");
+    console.log(aes_key);
+
+    console.log("Payload");
+    console.log(payload);
+
+    console.log("Auth Tag");
+    console.log(authTag);
+
+    console.log("IV");
+    console.log(aes_iv);
+
     const decipher = crypto.createDecipheriv("aes-256-gcm", aes_key, aes_iv);
     decipher.setAuthTag(authTag);
     var decryptedPayload = decipher.update(payload, 'hex', 'utf8') + decipher.final('utf8');
