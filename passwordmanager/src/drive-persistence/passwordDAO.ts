@@ -59,8 +59,10 @@ export async function createNewEntry(connection: any, entry: any): Promise<any>{
             create: [entry_document],
         };
 
-        console.log("Uploading (Async). Returning to Main");
-        return connection.platform.documents.broadcast(document_batch, connection.identity);
+        console.log("Uploading");
+        let result = await connection.platform.documents.broadcast(document_batch, connection.identity)
+        console.log("uploaded");
+        return result;
     } catch (e) {
         console.log(e);
     }

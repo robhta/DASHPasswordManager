@@ -14,6 +14,8 @@ const { Storage } = Plugins;
 
 export class Home extends React.Component{
 
+    localIndex: number;
+
     view: {
         login: boolean,
         passwords: boolean,
@@ -33,6 +35,8 @@ export class Home extends React.Component{
     constructor(props: any) {
         super(props);
 
+        this.localIndex = 0;
+
         this.view = {
             login: true,
             passwords: false,
@@ -48,6 +52,7 @@ export class Home extends React.Component{
 
         // Dummi-Data
         this.entries = [
+            /*
             {
                 user: "DennisO",
                 password: "FirstPassword",
@@ -63,6 +68,8 @@ export class Home extends React.Component{
                 password: "ThirdPassword",
                 note: "someRandom.org"
             }
+
+             */
         ];
 
         //Binding functions to this component
@@ -70,8 +77,59 @@ export class Home extends React.Component{
         this.callbackParentPasswords = this.callbackParentPasswords.bind(this);
         this.callbackParentNewPassword = this.callbackParentNewPassword.bind(this);
         this.callbackParentPasswordDelete = this.callbackParentPasswordDelete.bind(this);
+        this.initLocalStorage = this.initLocalStorage.bind(this);
         this.initDash = this.initDash.bind(this);
 
+
+    }
+
+    /**
+     * Initialisiert den Localstorage.
+     * TODO: localIndex verbessern
+     */
+    async initLocalStorage(){
+        console.log("start init the local storage")
+
+        let keys : any;
+
+        //Returns an Object like this {keys:[key1,key2,key3,...]}
+        keys = await Storage.keys();
+        console.log("Number of local passwords: ", keys.keys.length);
+        this.localIndex = keys.keys.length + 1; //Start at an empty index
+
+
+        for(let index in keys.keys){
+            let tmpIndex = parseInt(index) + 1;
+            console.log("Loading index:", tmpIndex);
+
+            let encryptedItem = await Storage.get({key: tmpIndex.toString()});
+
+            if (typeof encryptedItem.value === "string") {
+                let encryptedPayload = JSON.parse(encryptedItem.value);
+
+                let masterKey = keyManager.getHDWalletHardendKey(this.mnemonic, "", tmpIndex, 0);
+
+                let encKey = pwdManager.getKey(masterKey);
+
+                let decPayload : any = pwdManager.fileLevelDecrytion(
+                    encKey,
+                    encryptedPayload.payload,
+                    Buffer.from(encryptedPayload.authTag),
+                    Buffer.from(encryptedPayload.iv));
+                console.log("decripted Payload");
+
+                console.log(JSON.parse(decPayload));
+                this.entries.push(JSON.parse(decPayload));
+            }
+
+
+
+
+        }
+        console.log(this.entries);
+        this.forceUpdate();
+
+        console.log("local storage set up");
     }
 
     /**
@@ -80,12 +138,13 @@ export class Home extends React.Component{
      * for further usage.
      */
     async initDash() {
+        //Fetch all local stored Entries
         console.log("start init Dash")
         this.connection.platform = this.client.platform;
         let identity = null;
 
         console.log("Fetch Identities");
-        /*
+
         let identities = await dapi.getAllIdentities(this.client);
         if(identities !== null ){
             console.log("Found:");
@@ -102,8 +161,6 @@ export class Home extends React.Component{
             console.log(identity);
         }
 
-         */
-
 /*        let a = await this.setObject();
         let b = await this.getObject();
         let c = await this.setItem();
@@ -115,21 +172,12 @@ export class Home extends React.Component{
         }));
         console.log(Storage.get({ key: "hallo"}));*/
 
-        //Fetch all local stored Entries
-        let keys = await Storage.keys();
-        console.log(keys);
-        for(let key in keys){
-            this.entries.push(await Storage.get({key: key}));
-        }
-        this.forceUpdate();
+
 
         console.log("Resolve identity string to dash identity");
-        this.connection.identity = await this.connection.platform.identities.get("EXGyWgmND3avy94A3f8nF9mWWGEcvqaw8mtgwpu2QCNw"); //TODO: default Value change!
+        this.connection.identity = await this.connection.platform.identities.get(identity);
         console.log(this.connection)
         console.log("Required connection information retrieved");
-
-
-
 
         await this.fetchingAllPasswords();
     }
@@ -152,7 +200,8 @@ export class Home extends React.Component{
 
         this.forceUpdate();
 
-        this.initDash().then(r => console.log("init dash finished"));
+        this.initLocalStorage().then(r => console.log("init local storage finished"));
+        //this.initDash().then(r => console.log("init dash finished"));
     }
 
     callbackParentPasswords(){
@@ -186,19 +235,24 @@ export class Home extends React.Component{
         console.log("private key")
         console.log(privateKey)
         const symKey = pwdManager.getKey(privateKey);
-        let payload = pwdManager.fileLevelEncrytion(symKey, entry.toString());
-        payload.index = 0; //TODO: care about index
+        let payload = pwdManager.fileLevelEncrytion(symKey, JSON.stringify(entry));
+        payload.index = this.localIndex; //TODO: care about index
+        console.log("Payload which is uploaded:");
+        console.log(payload);
 
         //Store all new Entrys to Local Storage
         await Storage.set({
             key: payload.index.toString(),
-            value: JSON.stringify({ payload : payload.payload,
+            value: JSON.stringify({
+                payload : payload.payload,
                 iv : payload.iv,
                 authTag : payload.authTag,
             })
         });
+        this.localIndex++;
+
         //Store all new Entrys to Dapi Storage
-        await dapi.createNewEntry(this.connection, payload);
+        //await dapi.createNewEntry(this.connection, payload);
 
         this.forceUpdate();
     }
