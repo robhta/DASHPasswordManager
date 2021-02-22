@@ -201,7 +201,7 @@ export class Home extends React.Component{
         this.forceUpdate();
 
         this.initLocalStorage().then(r => console.log("init local storage finished"));
-        //this.initDash().then(r => console.log("init dash finished"));
+        this.initDash().then(r => console.log("init dash finished"));
     }
 
     callbackParentPasswords(){
@@ -252,7 +252,7 @@ export class Home extends React.Component{
         this.localIndex++;
 
         //Store all new Entrys to Dapi Storage
-        //await dapi.createNewEntry(this.connection, payload);
+        await dapi.createNewEntry(this.connection, payload);
 
         this.forceUpdate();
     }
