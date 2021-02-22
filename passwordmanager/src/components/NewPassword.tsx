@@ -1,9 +1,9 @@
 import React from 'react';
-import {IonButton, IonCard, IonCardContent, IonCardHeader, IonInput, IonItem, IonLabel, IonTitle} from "@ionic/react";
+import {IonButton, IonCard, IonCardContent, IonCardHeader, IonInput, IonItem, IonLabel, IonTitle, IonCheckbox} from "@ionic/react";
 
 
 interface INewPasswordProps{
-    callback(entry: any): any,
+    callback(entry: any, onlineFlag: boolean): any,
 }
 
 export class NewPassword extends React.Component<INewPasswordProps>{
@@ -13,6 +13,8 @@ export class NewPassword extends React.Component<INewPasswordProps>{
         note: string,
     }
 
+    onlineFlag: boolean;
+
     constructor(props: any) {
         super(props);
 
@@ -21,6 +23,8 @@ export class NewPassword extends React.Component<INewPasswordProps>{
             password: "",
             note: "",
         }
+
+        this.onlineFlag = true;
 
         this.usernameChanged = this.usernameChanged.bind(this);
         this.passwordChanged = this.passwordChanged.bind(this);
@@ -41,7 +45,7 @@ export class NewPassword extends React.Component<INewPasswordProps>{
     }
 
     addNewEntry(){
-        this.props.callback(this.entry);
+        this.props.callback(this.entry, this.onlineFlag);
     }
 
     render(){
@@ -64,6 +68,13 @@ export class NewPassword extends React.Component<INewPasswordProps>{
                     <IonItem>
                         <IonLabel position="floating">Enter note</IonLabel>
                         <IonInput onIonChange={this.noteChanged}/>
+                    </IonItem>
+                    <IonItem>
+                        <IonLabel>Load to Drive</IonLabel>
+                        <IonCheckbox checked={this.onlineFlag} onIonChange={e => {
+                            this.onlineFlag = e.detail.checked;
+                            this.forceUpdate();
+                        }} />
                     </IonItem>
                     <IonButton onClick={this.addNewEntry}>
                         Add

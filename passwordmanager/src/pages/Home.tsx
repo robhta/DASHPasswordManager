@@ -224,7 +224,7 @@ export class Home extends React.Component{
     }
 
 
-    async callbackParentNewPassword(entry : any){
+    async callbackParentNewPassword(entry : any, onlineFlag: boolean){
         this.view.passwords = true;
         this.view.new = false;
 
@@ -240,19 +240,21 @@ export class Home extends React.Component{
         console.log("Payload which is uploaded:");
         console.log(payload);
 
-        //Store all new Entrys to Local Storage
-        await Storage.set({
-            key: payload.index.toString(),
-            value: JSON.stringify({
-                payload : payload.payload,
-                iv : payload.iv,
-                authTag : payload.authTag,
-            })
-        });
-        this.localIndex++;
-
-        //Store all new Entrys to Dapi Storage
-        await dapi.createNewEntry(this.connection, payload);
+        if(!onlineFlag){
+            //Store all new Entrys to Local Storage
+            await Storage.set({
+                key: payload.index.toString(),
+                value: JSON.stringify({
+                    payload : payload.payload,
+                    iv : payload.iv,
+                    authTag : payload.authTag,
+                })
+            });
+            this.localIndex++;
+        }else{
+            //Store all new Entrys to Dapi Storage
+            await dapi.createNewEntry(this.connection, payload);
+        }
 
         this.forceUpdate();
     }
