@@ -1,6 +1,7 @@
 {
   "appId": "io.ionic.starter",
   "appName": "passwordmanager",
+  "linuxAndroidStudioPath": "/snap/android-studio/current/android-studio/bin/studio.sh",
   "bundledWebRuntime": false,
   "npmClient": "npm",
   "webDir": "build",

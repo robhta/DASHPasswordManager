@@ -7,6 +7,8 @@ import React from "react";
 import * as dapi from '../drive-persistence/dapi'
 import * as pwdManager from '../cryptography/pwdManager'
 import * as keyManager from '../keymanagement/keyderivation'
+import * as Dash from 'dash'
+import * as crypto from 'crypto'
 
 import { Plugins } from '@capacitor/core';
 
@@ -107,15 +109,16 @@ export class Home extends React.Component{
             if (typeof encryptedItem.value === "string") {
                 let encryptedPayload = JSON.parse(encryptedItem.value);
 
-                let masterKey = keyManager.getHDWalletHardendKey(this.mnemonic, "", tmpIndex, 0);
+                let masterKey = keyManager.getHDWalletHardendKey(this.mnemonic, "", tmpIndex, 0, Dash);
 
-                let encKey = pwdManager.getKey(masterKey);
+                let encKey = pwdManager.getKey(masterKey, crypto);
 
                 let decPayload : any = pwdManager.fileLevelDecrytion(
                     encKey,
                     encryptedPayload.payload,
                     Buffer.from(encryptedPayload.authTag),
-                    Buffer.from(encryptedPayload.iv));
+                    Buffer.from(encryptedPayload.iv),
+                    crypto);
                 console.log("decripted Payload");
 
                 console.log(JSON.parse(decPayload));
@@ -231,11 +234,11 @@ export class Home extends React.Component{
         this.entries.push(entry);
 
         //TODO: Do crypto and push to drive
-        const privateKey = keyManager.getHDWalletHardendKey(this.mnemonic, "",1, 1);
+        const privateKey = keyManager.getHDWalletHardendKey(this.mnemonic, "",1, 1, Dash);
         console.log("private key")
         console.log(privateKey)
-        const symKey = pwdManager.getKey(privateKey);
-        let payload = pwdManager.fileLevelEncrytion(symKey, JSON.stringify(entry));
+        const symKey = pwdManager.getKey(privateKey, crypto);
+        let payload = pwdManager.fileLevelEncrytion(symKey, JSON.stringify(entry), crypto);
         payload.index = this.localIndex; //TODO: care about index
         console.log("Payload which is uploaded:");
         console.log(payload);
