@@ -18,7 +18,8 @@ export class Login extends React.Component<ILoginProps>{
         wallet: {
             mnemonic: string
         },
-        apps: Object
+        apps: Object,
+        unsafeOptions: Object
     };
 
     //Constructor
@@ -34,9 +35,12 @@ export class Login extends React.Component<ILoginProps>{
             },
             apps: {
                 passwordManager: {
-                    contractId: '7HCszNLrYbZDFzK27eCzNGdgm8x4mkp5DkfTZ5wpGCkH'
+                    contractId: 'AAREKsmfKk9QKX1HPKKnQum7yKuFukxyWpEAuYabVLAs'
                 },
-            }
+            },
+            unsafeOptions: {
+                skipSynchronizationBeforeHeight: 415000, // only sync from start of 2021
+            },
         }
 
         this.state = {show: false};
