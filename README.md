@@ -1,5 +1,8 @@
 # DASHPasswordManager
 
+Concept:
+https://docs.google.com/document/d/e/2PACX-1vQ89VBwYm5t59Dg6eZlfoI33Ul5I3hu6EYboM4maz4oLZ8C3Hd2ubsH26JKT9eWhJn4I-OT_rzBAYbf/pub
+
 <details>
 <summary markdown="span">run the app</summary>
 	
