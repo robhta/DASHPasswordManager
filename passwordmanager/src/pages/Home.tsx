@@ -148,7 +148,20 @@ export class Home extends React.Component{
 
         console.log("Fetch Identities");
 
-        let identities = await dapi.getAllIdentities(this.client);
+        let i = 0;
+        let identities = null;
+        let keepTrying;
+        do {
+            try {
+                console.log("Identity Try: ", i);
+                keepTrying = await dapi.getAllIdentities(this.client);
+                i++;
+                console.log("keepTrying: ", keepTrying);
+            } catch {
+                keepTrying = false;
+            }
+        } while (keepTrying)
+
         if(identities !== null ){
             console.log("Found:");
             console.log(identities);
@@ -158,7 +171,17 @@ export class Home extends React.Component{
             console.log(identity);
         }else{
             console.log("No identities found. Create a new one for you");
-            identity = await dapi.createIdentity(this.connection);
+            let i = 0;
+            do {
+                try {
+                    console.log("Identity Try: ", i);
+                    identity = await dapi.createIdentity(this.connection);
+                    i++;
+                } catch {
+                    identity = false;
+                }
+            } while (identity)
+           // identity = await dapi.createIdentity(this.connection);
             identity = identity.getId().toString();
             console.log("Your new identity: ");
             console.log(identity);
@@ -188,7 +211,22 @@ export class Home extends React.Component{
 
     async fetchingAllPasswords(){
         console.log("fetch pws:");
-        let passwords = await dapi.getAllEntries(this.connection);
+        let i = 0;
+        let passwords = null;
+
+        let keepTrying;
+        do {
+            try {
+                console.log("Try: ", i);
+                passwords = await dapi.getAllEntries(this.connection);
+                i++;
+            } catch {
+                passwords = false;
+            }
+        } while (passwords)
+
+
+        //let passwords = await dapi.getAllEntries(this.connection);
 
         console.log(passwords);
 
@@ -256,7 +294,21 @@ export class Home extends React.Component{
             this.localIndex++;
         }else{
             //Store all new Entrys to Dapi Storage
-            await dapi.createNewEntry(this.connection, payload);
+            let i = 0;
+            let keepTrying;
+
+            do {
+                try {
+                    keepTrying = await dapi.createNewEntry(this.connection, payload);
+                    console.log("Try: ", i);
+                    i++;
+                } catch {
+                    keepTrying = false;
+                }
+            } while (keepTrying)
+
+            //await dapi.createNewEntry(this.connection, payload);
+
         }
 
         this.forceUpdate();

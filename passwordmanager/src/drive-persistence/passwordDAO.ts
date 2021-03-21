@@ -13,11 +13,11 @@ export async function getAllEntries(connection: any) : Promise<any>{
                 ],
             },
         );
-
         return documents
 
     } catch (e) {
         console.error('Something went wrong:', e);
+        return false;
     }
 }
 
@@ -44,7 +44,6 @@ export async function createNewEntry(connection: any, entry: any): Promise<any>{
         authenticationTag: entry.authTag,
         payload: Buffer.from(entry.payload)
     };
-
     console.log("Start creating a new entry on drive");
     try {
         const entry_document = await connection.platform.documents.create(
@@ -65,8 +64,10 @@ export async function createNewEntry(connection: any, entry: any): Promise<any>{
         return result;
     } catch (e) {
         console.log(e);
+        return false;
     }
 }
+
 
 /**
  * delete an entry from drive

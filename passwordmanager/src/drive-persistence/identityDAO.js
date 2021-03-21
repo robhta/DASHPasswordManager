@@ -12,20 +12,22 @@ export async function createIdentity(connection) {
     try {
         return await connection.platform.identities.register();
     } catch (e) {
-        console.error('Something went wrong:', e);
+        console.log('Something went wrong:', e);
+        return false;
     }
-
-    return null;
 }
 
 /**
  * Returns a list of all identities to the given connection
- * @param connection: {WhatsDappConnection}
- * @returns {Promise<string[]>}
  */
 export async function getAllIdentities(client){
-    const account = await client.getWalletAccount();
-    return account.getIdentityIds();
+    try{
+        const account = await client.getWalletAccount();
+        return account.identities.getIdentityIds();
+    }catch(e){
+        console.log(e);
+        return false;
+    }
 }
 
 /**
@@ -40,7 +42,6 @@ export async function topUpIdentity(connection, topUpAmount) {
     } catch (e) {
         console.error('Something went wrong:', e);
     }
-    return false;
 }
 
 /**
