@@ -5,7 +5,7 @@ const ENV_NETWORK = "testnet"
 
 export function getHDWalletHardendKey(mnemonic, passphrase, index, onlineFlag, Dash){
     const { Mnemonic } = Dash.Core;
-    const mnemonicNew = new Mnemonic("moment embody rural position pepper boat aunt frost today bulb wrap inhale");
+    const mnemonicNew = new Mnemonic(mnemonic);
     const seed = mnemonicNew.toHDPrivateKey(passphrase, ENV_NETWORK);
     let newKey = null;
 
@@ -15,8 +15,7 @@ export function getHDWalletHardendKey(mnemonic, passphrase, index, onlineFlag, D
     } else {
         newKey = seed.deriveChild(10116,true).deriveChild(1,true).deriveChild(index, true);
     }
-    console.log(newKey.xprivkey);
-    return newKey;
+    return newKey.xprivkey;
 
 }
 

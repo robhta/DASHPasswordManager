@@ -18,7 +18,7 @@ export class Login extends React.Component<ILoginProps>{
     constructor(props:any) {
         super(props);
 
-        this.mnemonic = ""; //TODO: change default value!
+        this.mnemonic = "";
 
 
         this.state = {show: false};

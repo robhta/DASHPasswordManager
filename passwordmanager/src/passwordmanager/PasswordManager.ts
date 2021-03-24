@@ -34,6 +34,7 @@ export class PasswordManager{
      * @param mnemonic
      */
     async setUpDash(mnemonic: string){
+        //Storage.clear();
         console.log("setting up Dash Client")
         this.mnemonic = mnemonic;
 
@@ -52,30 +53,59 @@ export class PasswordManager{
             },
         }
 
+        console.log(clientOpts.wallet.mnemonic);
+
         let client = new Dash.Client(clientOpts);
 
         console.log("start fetching all identities");
         this.connection.platform = client.platform;
         let identity = null;
-        let identities = await dapi.getAllIdentities(client);
+        let identities = undefined;
 
-        if(identities !== false && identities.length >= 0){
+        try{
+            console.log("start");
+            while(identities === undefined){
+                console.log("try to fetch all identies");
+                identities = await dapi.getAllIdentities(client);
+            }
+
+            console.log(identities)
+        }catch(e){
+            console.log("502 is just a bitch");
+        }
+
+        let size = identities.length;
+        console.log("Number of identities: ", identities.length);
+
+
+        if(parseInt(size) > 0){
             console.log("Found:");
             console.log(identities);
             identity = identities[0];
 
             console.log("Use identity:");
             console.log(identity);
+            try{
+                console.log("lets go")
+                this.connection.identity = await this.connection.platform.identities.get(identity);
+            }catch(e){
+                console.log("502 is a bitch")
+            }
+
         }else if(identities.length === 0){
             console.log("No identities found. Create a new one for you");
-            identity = await dapi.createIdentity(this.connection);
+            while(identity === null){
+                console.log("try to create a identity");
+                identity = await dapi.createIdentity(this.connection);
+                console.log(identity);
+            }
+
+
+            this.connection.identity = await this.connection.platform.identities.get(identity.getId().toString());
         }else{
             console.log("Error while getting all identities");
         }
 
-        console.log("Resolve identity string to dash identity");
-        if(identity !== null)
-            this.connection.identity = await this.connection.platform.identities.get(identity.getId().toString());
         console.log(this.connection);
         console.log("Required connection information retrieved");
     }
@@ -112,8 +142,10 @@ export class PasswordManager{
                 let encryptedPayload = JSON.parse(encryptedItem.value);
 
                 let masterKey = keyManager.getHDWalletHardendKey(this.mnemonic, "", tmpIndex, 0, Dash);
+                console.log(masterKey)
 
                 let encKey = pwdManager.getKey(masterKey, crypto);
+                console.log(encKey)
 
                 let decPayload: any = pwdManager.fileLevelDecrytion(
                     encKey,
@@ -145,7 +177,7 @@ export class PasswordManager{
      * @param onlineFlag - 0 = Localstorage        1 = Drive
      */
     async createNewPassword(entry : any, onlineFlag: boolean){
-        const privateKey = keyManager.getHDWalletHardendKey(this.mnemonic, "",1, 1, Dash);
+        const privateKey = keyManager.getHDWalletHardendKey(this.mnemonic, "",this.localIndex, onlineFlag, Dash);
         console.log("private key");
         console.log(privateKey);
         const symKey = pwdManager.getKey(privateKey, crypto);

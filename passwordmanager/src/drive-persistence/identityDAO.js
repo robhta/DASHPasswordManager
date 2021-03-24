@@ -12,8 +12,8 @@ export async function createIdentity(connection) {
     try {
         return await connection.platform.identities.register();
     } catch (e) {
-        console.log("new try creating an identity");
-        await createIdentity(connection);
+        console.log(e);
+        //return await createIdentity(connection);
     }
 }
 
@@ -25,8 +25,8 @@ export async function getAllIdentities(client){
         const account = await client.getWalletAccount();
         return account.identities.getIdentityIds();
     }catch(e){
-        console.log("new try fetching all identities");
-        await getAllIdentities(client);
+        console.log("error fetching all identities");
+        //return await getAllIdentities(client);
     }
 }
 
