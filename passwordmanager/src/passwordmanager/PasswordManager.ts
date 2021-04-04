@@ -1,10 +1,11 @@
 import * as dapi from '../drive-persistence/dapi'
 import * as pwdManager from '../cryptography/pwdManager'
 import * as keyManager from '../keymanagement/keyderivation'
-import * as Dash from 'dash'
 import * as crypto from 'crypto'
 import {Plugins} from "@capacitor/core";
+//import * as Dash from 'dash'
 
+const Dash = require('dash');
 const { Storage } = Plugins;
 
 export class PasswordManager{
@@ -18,6 +19,7 @@ export class PasswordManager{
 
     //Local Storage
     localIndex: number
+    client: any
 
 
     constructor() {
@@ -27,6 +29,7 @@ export class PasswordManager{
         };
         this.mnemonic = "";
         this.localIndex = -1;
+        this.client = "";
     }
 
     /**
@@ -41,70 +44,74 @@ export class PasswordManager{
         let clientOpts = {
             network: 'testnet',
             wallet: {
-                mnemonic: mnemonic
+                mnemonic: mnemonic,
+                unsafeOptions: {
+                    skipSynchronizationBeforeHeight: 415000, // only sync from start of 2021
+                },
             },
             apps: {
                 passwordManager: {
                     contractId: 'AAREKsmfKk9QKX1HPKKnQum7yKuFukxyWpEAuYabVLAs'
                 },
             },
-            unsafeOptions: {
-                skipSynchronizationBeforeHeight: 415000, // only sync from start of 2021
-            },
         }
 
         console.log(clientOpts.wallet.mnemonic);
-
-        let client = new Dash.Client(clientOpts);
+        this.client = new Dash.Client(clientOpts);
+        console.log("Client: ", this.client);
 
         console.log("start fetching all identities");
-        this.connection.platform = client.platform;
+        this.connection.platform = this.client.platform;
+        console.log("Client.platform:", this.connection.platform);
         let identity = null;
         let identities = undefined;
 
         try{
             console.log("start");
-            while(identities === undefined){
-                console.log("try to fetch all identies");
-                identities = await dapi.getAllIdentities(client);
-            }
-
-            console.log(identities)
-        }catch(e){
-            console.log("502 is just a bitch");
-        }
-
-        let size = identities.length;
-        console.log("Number of identities: ", identities.length);
-
-
-        if(parseInt(size) > 0){
-            console.log("Found:");
+            console.log("try to fetch all identies");
+            identities = await dapi.getAllIdentities(this.client);
+            console.log("Identities:");
             console.log(identities);
-            identity = identities[0];
-
-            console.log("Use identity:");
-            console.log(identity);
-            try{
-                console.log("lets go")
-                this.connection.identity = await this.connection.platform.identities.get(identity);
-            }catch(e){
-                console.log("502 is a bitch")
-            }
-
-        }else if(identities.length === 0){
-            console.log("No identities found. Create a new one for you");
-            while(identity === null){
-                console.log("try to create a identity");
-                identity = await dapi.createIdentity(this.connection);
-                console.log(identity);
-            }
-
-
-            this.connection.identity = await this.connection.platform.identities.get(identity.getId().toString());
-        }else{
-            console.log("Error while getting all identities");
+        }catch(e){
+            console.log("error while fetching identies", e);
         }
+
+        let size = "null";
+        try {
+            size = identities.length;
+            console.log("Identieties.length", identities.length)
+            console.log("Number of identities: ", identities.length);
+            if(parseInt(size) > 0){
+                console.log("Found:");
+                console.log(identities);
+                identity = identities[0];
+
+                console.log("Use identity:");
+                console.log(identity);
+                try{
+                    console.log("Set Identity Object")
+                    this.connection.identity = this.connection.platform.identities.get(identity);
+                    console.log("Identity Object: ", this.connection.identity);
+                }catch(e) {
+                    console.log("Error while get Identity Object", e);
+                }
+            }else if(identities.length == 0){
+                console.log("No identities found. Create a new one for you");
+                console.log("try to create a identity");
+                identity = await dapi.createIdentity(this.client);
+                console.log("identity:", identity);
+                //this.connection.identity = await this.connection.platform.identities.get(identity.getId().toString());
+                this.connection.identity = await this.connection.platform.identities.get(identity.getId().toString());
+            }else{
+                console.log("Error while getting all identities");
+            }
+        } catch (e) {
+            console.log("error while get length of identites", e);
+        }
+
+
+
+
 
         console.log(this.connection);
         console.log("Required connection information retrieved");
@@ -176,8 +183,8 @@ export class PasswordManager{
      * @param entry
      * @param onlineFlag - 0 = Localstorage        1 = Drive
      */
-    async createNewPassword(entry : any, onlineFlag: boolean){
-        const privateKey = keyManager.getHDWalletHardendKey(this.mnemonic, "",this.localIndex, onlineFlag, Dash);
+    async createNewPassword(entry : any, onlineFlag: boolean) {
+        const privateKey = keyManager.getHDWalletHardendKey(this.mnemonic, "", this.localIndex, onlineFlag, Dash);
         console.log("private key");
         console.log(privateKey);
         const symKey = pwdManager.getKey(privateKey, crypto);
@@ -186,19 +193,19 @@ export class PasswordManager{
         payload.index = this.localIndex; //TODO: care about index and delete ts-ignore
         console.log("Payload which is uploaded:");
         console.log(payload);
-        if(!onlineFlag){
+        if (!onlineFlag) {
             //Store all new Entrys to Local Storage
             await Storage.set({
                 key: payload.index.toString(),
                 value: JSON.stringify({
-                    payload : payload.payload,
-                    iv : payload.iv,
-                    authTag : payload.authTag,
+                    payload: payload.payload,
+                    iv: payload.iv,
+                    authTag: payload.authTag,
                 })
             });
             this.localIndex++;
 
-        }else{
+        } else {
             await dapi.createNewEntry(this.connection, payload);
         }
     }
