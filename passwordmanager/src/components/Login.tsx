@@ -7,37 +7,19 @@ const Dash = require('dash');
 
 //For passing props
 interface ILoginProps{
-    callback(client: Object, mnemonic: string): any,
+    callback(mnemonic: string): any,
 }
 
 export class Login extends React.Component<ILoginProps>{
     //Variables
     mnemonic: string;
-    clientOpts: {
-        network: string,
-        wallet: {
-            mnemonic: string
-        },
-        apps: Object
-    };
 
     //Constructor
     constructor(props:any) {
         super(props);
 
-        this.mnemonic = "moment embody rural position pepper boat aunt frost today bulb wrap inhale"; //TODO: change default value!
+        this.mnemonic = "";
 
-        this.clientOpts = {
-            network: 'testnet',
-            wallet: {
-                mnemonic: "moment embody rural position pepper boat aunt frost today bulb wrap inhale", //TODO: change default value!
-            },
-            apps: {
-                passwordManager: {
-                    contractId: '7HCszNLrYbZDFzK27eCzNGdgm8x4mkp5DkfTZ5wpGCkH'
-                },
-            }
-        }
 
         this.state = {show: false};
 
@@ -48,15 +30,11 @@ export class Login extends React.Component<ILoginProps>{
 
     //Functions
     login(){
-        const client = new Dash.Client(this.clientOpts);
-        console.log("Logged in. Mnemonic is valid.")
-        console.log(client);
-
-        this.props.callback(client, this.clientOpts.wallet.mnemonic);
+        this.props.callback(this.mnemonic);
     }
 
     mnemonicChanged(event: any){
-        this.clientOpts["wallet"].mnemonic = event.detail.value;
+        this.mnemonic = event.detail.value;
     }
 
     render(){
