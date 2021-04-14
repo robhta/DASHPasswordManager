@@ -1,6 +1,6 @@
-import * as dapi from '../drive-persistence/dapi'
-import * as pwdManager from '../cryptography/pwdManager'
-import * as keyManager from '../keymanagement/keyderivation'
+import * as dapi from './drive-persistence/dapi'
+import * as pwdManager from './cryptography/pwdManager'
+import * as keyManager from './keymanagement/keyderivation'
 import * as crypto from 'crypto'
 import {Plugins} from "@capacitor/core";
 //import * as Dash from 'dash'
@@ -90,7 +90,7 @@ export class PasswordManager{
                 console.log(identity);
                 try{
                     console.log("Set Identity Object")
-                    this.connection.identity = this.connection.platform.identities.get(identity);
+                    this.connection.identity = await this.connection.platform.identities.get(identity);
                     console.log("Identity Object: ", this.connection.identity);
                 }catch(e) {
                     console.log("Error while get Identity Object", e);

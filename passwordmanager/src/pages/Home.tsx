@@ -4,7 +4,7 @@ import Passwords from "../components/Passwords";
 import NewPassword from "../components/NewPassword"
 import './Home.css';
 import React from "react";
-import PasswordManager from "../passwordmanager/PasswordManager"
+import PasswordManager from "../backend/PasswordManager"
 
 
 export class Home extends React.Component{
