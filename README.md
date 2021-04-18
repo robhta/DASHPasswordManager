@@ -126,3 +126,18 @@
 	- ![alt text](https://github.com/PanzerknackerR/DASHPasswordManager/blob/main/doc/pictures/prototyp_architecture.png)
 
 </details>
+
+<details>
+<summary markdown="span">Testing Drive-Backend</summary>	
+Because of Assertion Error Bug you have to test the localstorage via GUI and the drive backend via backendCLI
+	
+- Localstorage:
+	- Look at run the app section above and run the app
+	- When creating a password uncheck "upload to drive"!
+	- After restarting the app, the saved password should be seen.
+- Drive:
+	- Go to /backendCLI
+	- run npm install
+	- run node BackendCLI.js
+	- When 502 Error while uploading, please restart the CLI
+</details>
