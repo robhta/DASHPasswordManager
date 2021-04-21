@@ -123,6 +123,7 @@ function createNewEntry(connection, entry) {
                 case 4:
                     e_2 = _a.sent();
                     console.log(e_2);
+                    console.log(e_2.data.errors[0]);
                     return [2 /*return*/, false];
                 case 5: return [2 /*return*/];
             }

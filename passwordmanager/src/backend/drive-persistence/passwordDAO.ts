@@ -67,6 +67,7 @@ export async function createNewEntry(connection: any, entry: any): Promise<any>{
         return result;
     } catch (e) {
         console.log(e);
+        console.log(e.data.errors[0]);
         return false;
     }
 }

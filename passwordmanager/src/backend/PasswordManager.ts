@@ -16,10 +16,11 @@ export class PasswordManager{
         platform: any,
         identity: Object,
     };
+    driveIndex: number;
 
     //Local Storage
-    localIndex: number
-    client: any
+    localIndex: number;
+    client: any;
 
 
     constructor() {
@@ -28,7 +29,8 @@ export class PasswordManager{
             identity: {}
         };
         this.mnemonic = "";
-        this.localIndex = -1;
+        this.localIndex = 0;
+        this.driveIndex = 0;
         this.client = "";
     }
 
@@ -51,15 +53,12 @@ export class PasswordManager{
             },
             apps: {
                 passwordManager: {
-                    contractId: 'AAREKsmfKk9QKX1HPKKnQum7yKuFukxyWpEAuYabVLAs'
+                    contractId: '81gBTTGijJu2oh3bj6bby9vgvTDuH8qh6jU2tkGiufRc'
                 },
             },
         }
 
-        console.log(clientOpts.wallet.mnemonic);
         this.client = new Dash.Client(clientOpts);
-        console.log("Client: ", this.client);
-
         console.log("start fetching all identities");
         this.connection.platform = this.client.platform;
         console.log("Client.platform:", this.connection.platform);
@@ -109,20 +108,68 @@ export class PasswordManager{
             console.log("error while get length of identites", e);
         }
 
-
-
-
-
         console.log(this.connection);
         console.log("Required connection information retrieved");
+        console.log("Init drive index");
+        await this.initDashPasswordIndex();
+        console.log("finished init dash backend");
+    }
+
+    async initDashPasswordIndex(){
+        let passwords = [];
+        passwords = await this.getAllDashPasswordsEncrypted();
+        for(let i = 0; i < passwords.length; i++){
+            if(passwords[i].data.index > this.driveIndex)
+                this.driveIndex = passwords[i].data.index;
+
+        }
+
+        console.log("highest index: ", this.driveIndex);
+        this.driveIndex++;
+        console.log("set index to: ", this.driveIndex);
+
     }
 
 
-    async getAllDashPasswords(){
+    async getAllDashPasswordsEncrypted(){
         console.log("Fetching all passwords from drive")
         let passwords = await dapi.getAllEntries(this.connection);
 
         return passwords;
+    }
+
+    async getAllDashPasswords(){
+        let passwordsEncrypted = [];
+        passwordsEncrypted = await this.getAllDashPasswordsEncrypted();
+
+        let passwordsDecrypted = [];
+
+        for(let i = 0; i < passwordsEncrypted.length; i++){
+            console.log("Decrypt password: ", i);
+            let encryptedPassword = passwordsEncrypted[i];
+            console.log("Payload: ", encryptedPassword.data.payload.toString());
+
+            let payload = encryptedPassword.data.payload.toString();
+            console.log("Index: ", encryptedPassword.data.index);
+            let masterKey = keyManager.getHDWalletHardendKey(this.mnemonic, "", encryptedPassword.data.index, 1, Dash);
+            let encKey = pwdManager.getKey(masterKey, crypto);
+            console.log("Encryptionkey: ", encKey);
+
+            console.log("Authentication Tag: ", encryptedPassword.data.authenticationTag);
+
+            let decPayload: any = pwdManager.fileLevelDecrytion(
+                encKey,
+                payload,
+                encryptedPassword.data.authenticationTag,
+                encryptedPassword.data.inputVector,
+                crypto);
+
+            console.log(decPayload);
+            console.log();
+            passwordsDecrypted.push(decPayload);
+        }
+
+        return passwordsDecrypted;
     }
 
     /**
@@ -169,6 +216,7 @@ export class PasswordManager{
         return entries;
     }
 
+
     /**
      *
      * @param index
@@ -184,13 +232,27 @@ export class PasswordManager{
      * @param onlineFlag - 0 = Localstorage        1 = Drive
      */
     async createNewPassword(entry : any, onlineFlag: boolean) {
-        const privateKey = keyManager.getHDWalletHardendKey(this.mnemonic, "", this.localIndex, onlineFlag, Dash);
+        console.log(this.connection.identity);
+        let privateKey = "";
+
+        if(!onlineFlag){
+            console.log("Local PrivKey")
+            privateKey = keyManager.getHDWalletHardendKey(this.mnemonic, "", this.localIndex, onlineFlag, Dash);
+        }else{
+            console.log("Drive PrivKey")
+            privateKey = keyManager.getHDWalletHardendKey(this.mnemonic, "", this.driveIndex, onlineFlag, Dash);
+        }
+
         console.log("private key");
         console.log(privateKey);
         const symKey = pwdManager.getKey(privateKey, crypto);
         let payload = pwdManager.fileLevelEncrytion(symKey, JSON.stringify(entry), crypto);
-        // @ts-ignore
-        payload.index = this.localIndex; //TODO: care about index and delete ts-ignore
+
+        if(!onlineFlag)
+            payload.index = this.localIndex; //TODO: care about index and delete ts-ignore
+        else
+            payload.index = this.driveIndex;
+
         console.log("Payload which is uploaded:");
         console.log(payload);
         if (!onlineFlag) {
@@ -207,6 +269,7 @@ export class PasswordManager{
 
         } else {
             await dapi.createNewEntry(this.connection, payload);
+            this.driveIndex++;
         }
     }
 }

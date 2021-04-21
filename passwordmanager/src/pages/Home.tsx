@@ -4,7 +4,7 @@ import Passwords from "../components/Passwords";
 import NewPassword from "../components/NewPassword"
 import './Home.css';
 import React from "react";
-import PasswordManager from "../backend/PasswordManager"
+const PasswordManager =  require("../backend/dist/PasswordManager").default;
 
 
 export class Home extends React.Component{
@@ -73,7 +73,7 @@ export class Home extends React.Component{
 
         this.forceUpdate();
 
-        PasswordManager.setUpDash(mnemonic).then(r => console.log("init dash finished"));
+        PasswordManager.setUpDash(mnemonic).then(() => console.log("init dash finished"));
         this.initLocalStorage().then(r => console.log("init local storage finished"));
     }
 

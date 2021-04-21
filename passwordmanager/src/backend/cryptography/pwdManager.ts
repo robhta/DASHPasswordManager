@@ -33,8 +33,6 @@ export function fileLevelEncrytion(key, payload, crypto){
     const aes = crypto.createCipheriv("aes-256-gcm", aes_key, aes_iv);
     const encryptedPayload = aes.update(payload, 'utf8', 'hex') + aes.final('hex');
     const encrptedPayloadAuthTag = aes.getAuthTag();
-    console.log("Verschlüsselung:")
-    console.log(encryptedPayload);
 
     let res = {
         payload : encryptedPayload,
@@ -50,8 +48,6 @@ export function fileLevelDecrytion(aes_key, payload, authTag, aes_iv, crypto){
     const decipher = crypto.createDecipheriv("aes-256-gcm", aes_key, aes_iv);
     decipher.setAuthTag(authTag);
     var decryptedPayload = decipher.update(payload, 'hex', 'utf8') + decipher.final('utf8');
-    console.log("Entschlüsselung:")
-    console.log(decryptedPayload);
     return decryptedPayload;
 }
 

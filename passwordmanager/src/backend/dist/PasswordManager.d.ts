@@ -4,6 +4,7 @@ export declare class PasswordManager {
         platform: any;
         identity: Object;
     };
+    driveIndex: number;
     localIndex: number;
     client: any;
     constructor();
@@ -12,7 +13,9 @@ export declare class PasswordManager {
      * @param mnemonic
      */
     setUpDash(mnemonic: string): Promise<void>;
-    getAllDashPasswords(): Promise<any>;
+    initDashPasswordIndex(): Promise<void>;
+    getAllDashPasswordsEncrypted(): Promise<any>;
+    getAllDashPasswords(): Promise<any[]>;
     /**
      * Loads and decrypts all local passwords
      * TODO: improve localIndex generation
