@@ -4,7 +4,11 @@
 
 <details>
 <summary markdown="span">run the app</summary>
-	
+
+- first install ionic:
+	- 
+	- npm install -g @ionic/cli	 
+
 - run inside your browser:
 	-
 	- you need a terminal or an IDE like webstom, where you have opened to projekt directory
