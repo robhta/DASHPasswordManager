@@ -137,6 +137,8 @@ Because of Assertion Error Bug you have to test the localstorage via GUI and the
 	- When creating a password uncheck "upload to drive"!
 	- After restarting the app, the saved password should be seen.
 - Drive:
+        - Go to ``` /passwordmanager ```
+        - ``` npm install ```
 	- Requirements: Mnemonic with identity!
 	- Go to ``` /backendCLI ```
 	- run ``` npm install ```
