@@ -9,20 +9,20 @@
 	-
 	- TODO: Add Ionic installation
 	- you need a terminal or an IDE like webstom, where you have opened to projekt directory
-	- cd passwordmanager/
-	- npm install
-	- ionic serve
+	- ``` cd passwordmanager/ ```
+	- ``` npm install ```
+	- ``` ionic serve```
 	
 - run on your phone (only android is considered now):
 	-
 	- you need to have a working android studio environment on your pc
 	- you need a terminal or an IDE like webstom, where you have opened to projekt directory
-	- cd passwordmanager/
-	- npm install (if you dont have done it before)
-	- ionic build
+	- ``` cd passwordmanager/ ```
+	- ``` npm install ``` (if you dont have done it before)
+	- ``` ionic build ```
 	- add in capacitor.config.json path of android studio like: "linuxAndroidStudioPath": "/snap/android-studio/current/android-studio/bin/studio.sh",
-	- ionic cap add android
-	- ionic cap open android
+	- ``` ionic cap add android ```
+	- ``` ionic cap open android ```
 	- then android studio will be open and you can start the app on your device or emulator of choice
 
 </details>
