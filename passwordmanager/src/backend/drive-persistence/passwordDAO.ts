@@ -44,24 +44,25 @@ export async function createNewEntry(connection: any, entry: any): Promise<any>{
         authenticationTag: entry.authTag,
         payload: Buffer.from(entry.payload)
     };
-    console.log("Start creating a new entry on drive");
+    console.log("start creating a new entry on drive");
     try {
-        console.log("connection.identity: ", connection.identity);
-        console.log("doc_properties", doc_properties);
+
+        //console.log("connection.identity: ", connection.identity);
+        //console.log("doc_properties", doc_properties);
         const platform = connection.platform;
         const entry_document = await platform.documents.create(
             'passwordManager.passwordmanager',
             connection.identity,
             doc_properties,
         );
-        console.log("Document locally created");
-        console.log(entry_document);
+        //console.log("Document locally created");
+        //console.log(entry_document);
 
         const documentBatch = {
             create: [entry_document],
         };
 
-        console.log("Uploading");
+        //console.log("uploading");
         let result = await platform.documents.broadcast(documentBatch, connection.identity)
         console.log("uploaded");
         return result;

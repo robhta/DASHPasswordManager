@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.fileLevelDecrytion = exports.fileLevelEncrytion = exports.getKey = void 0;
 //AES-256-CBC encryption of an HD-Wallet hardened Private Key
 function encryptPrivateKey(privateKey, ENC_VALUE, crypto) {
     var hmac = crypto.createHmac('sha512', privateKey).digest();

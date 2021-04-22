@@ -1,23 +1,4 @@
 "use strict";
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -54,8 +35,14 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.PasswordManager = void 0;
 var dapi = __importStar(require("./drive-persistence/dapi"));
 var pwdManager = __importStar(require("./cryptography/pwdManager"));
 var keyManager = __importStar(require("./keymanagement/keyderivation"));
@@ -105,14 +92,11 @@ var PasswordManager = /** @class */ (function () {
                         this.client = new Dash.Client(clientOpts);
                         console.log("start fetching all identities");
                         this.connection.platform = this.client.platform;
-                        console.log("Client.platform:", this.connection.platform);
                         identity = null;
                         identities = undefined;
                         _c.label = 1;
                     case 1:
                         _c.trys.push([1, 3, , 4]);
-                        console.log("start");
-                        console.log("try to fetch all identies");
                         return [4 /*yield*/, dapi.getAllIdentities(this.client)];
                     case 2:
                         identities = _c.sent();
@@ -129,23 +113,21 @@ var PasswordManager = /** @class */ (function () {
                     case 5:
                         _c.trys.push([5, 15, , 16]);
                         size = identities.length;
-                        console.log("Identieties.length", identities.length);
-                        console.log("Number of identities: ", identities.length);
                         if (!(parseInt(size) > 0)) return [3 /*break*/, 10];
-                        console.log("Found:");
-                        console.log(identities);
+                        //console.log("Found:");
+                        //console.log(identities);
                         identity = identities[0];
                         console.log("Use identity:");
                         console.log(identity);
                         _c.label = 6;
                     case 6:
                         _c.trys.push([6, 8, , 9]);
-                        console.log("Set Identity Object");
+                        //console.log("Set Identity Object")
                         _a = this.connection;
                         return [4 /*yield*/, this.connection.platform.identities.get(identity)];
                     case 7:
+                        //console.log("Set Identity Object")
                         _a.identity = _c.sent();
-                        console.log("Identity Object: ", this.connection.identity);
                         return [3 /*break*/, 9];
                     case 8:
                         e_2 = _c.sent();
@@ -244,11 +226,9 @@ var PasswordManager = /** @class */ (function () {
                             console.log("Index: ", encryptedPassword.data.index);
                             masterKey = keyManager.getHDWalletHardendKey(this.mnemonic, "", encryptedPassword.data.index, 1, Dash);
                             encKey = pwdManager.getKey(masterKey, crypto);
-                            console.log("Encryptionkey: ", encKey);
-                            console.log("Authentication Tag: ", encryptedPassword.data.authenticationTag);
                             decPayload = pwdManager.fileLevelDecrytion(encKey, payload, encryptedPassword.data.authenticationTag, encryptedPassword.data.inputVector, crypto);
-                            console.log(decPayload);
-                            console.log();
+                            //console.log(decPayload);
+                            //console.log();
                             passwordsDecrypted.push(decPayload);
                         }
                         return [2 /*return*/, passwordsDecrypted];
@@ -336,23 +316,19 @@ var PasswordManager = /** @class */ (function () {
                         console.log(this.connection.identity);
                         privateKey = "";
                         if (!onlineFlag) {
-                            console.log("Local PrivKey");
+                            //console.log("Local PrivKey")
                             privateKey = keyManager.getHDWalletHardendKey(this.mnemonic, "", this.localIndex, onlineFlag, Dash);
                         }
                         else {
-                            console.log("Drive PrivKey");
+                            //console.log("Drive PrivKey")
                             privateKey = keyManager.getHDWalletHardendKey(this.mnemonic, "", this.driveIndex, onlineFlag, Dash);
                         }
-                        console.log("private key");
-                        console.log(privateKey);
                         symKey = pwdManager.getKey(privateKey, crypto);
                         payload = pwdManager.fileLevelEncrytion(symKey, JSON.stringify(entry), crypto);
                         if (!onlineFlag)
                             payload.index = this.localIndex; //TODO: care about index and delete ts-ignore
                         else
                             payload.index = this.driveIndex;
-                        console.log("Payload which is uploaded:");
-                        console.log(payload);
                         if (!!onlineFlag) return [3 /*break*/, 2];
                         //Store all new Entrys to Local Storage
                         return [4 /*yield*/, Storage.set({

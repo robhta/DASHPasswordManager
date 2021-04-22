@@ -11,7 +11,7 @@
 export async function createIdentity(connection) {
     try {
         console.log("Create Identity");
-        console.log("Connection die übergeben wurde: ", connection);
+        //console.log("Connection die übergeben wurde: ", connection);
         return await connection.platform.identities.register();
     } catch (e) {
         console.log(e);

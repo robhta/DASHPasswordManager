@@ -36,7 +36,6 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteEntry = exports.createNewEntry = exports.getEntryByIndex = exports.getAllEntries = void 0;
 /**
  * Get all encrypted passwords
  * @param connection
@@ -99,22 +98,17 @@ function createNewEntry(connection, entry) {
                         authenticationTag: entry.authTag,
                         payload: Buffer.from(entry.payload)
                     };
-                    console.log("Start creating a new entry on drive");
+                    console.log("start creating a new entry on drive");
                     _a.label = 1;
                 case 1:
                     _a.trys.push([1, 4, , 5]);
-                    console.log("connection.identity: ", connection.identity);
-                    console.log("doc_properties", doc_properties);
                     platform = connection.platform;
                     return [4 /*yield*/, platform.documents.create('passwordManager.passwordmanager', connection.identity, doc_properties)];
                 case 2:
                     entry_document = _a.sent();
-                    console.log("Document locally created");
-                    console.log(entry_document);
                     documentBatch = {
                         create: [entry_document],
                     };
-                    console.log("Uploading");
                     return [4 /*yield*/, platform.documents.broadcast(documentBatch, connection.identity)];
                 case 3:
                     result = _a.sent();

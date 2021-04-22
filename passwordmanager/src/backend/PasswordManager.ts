@@ -61,13 +61,11 @@ export class PasswordManager{
         this.client = new Dash.Client(clientOpts);
         console.log("start fetching all identities");
         this.connection.platform = this.client.platform;
-        console.log("Client.platform:", this.connection.platform);
+        //console.log("Client.platform:", this.connection.platform);
         let identity = null;
         let identities = undefined;
 
         try{
-            console.log("start");
-            console.log("try to fetch all identies");
             identities = await dapi.getAllIdentities(this.client);
             console.log("Identities:");
             console.log(identities);
@@ -78,19 +76,19 @@ export class PasswordManager{
         let size = "null";
         try {
             size = identities.length;
-            console.log("Identieties.length", identities.length)
-            console.log("Number of identities: ", identities.length);
+            //console.log("Identieties.length", identities.length)
+            //console.log("Number of identities: ", identities.length);
             if(parseInt(size) > 0){
-                console.log("Found:");
-                console.log(identities);
+                //console.log("Found:");
+                //console.log(identities);
                 identity = identities[0];
 
                 console.log("Use identity:");
                 console.log(identity);
                 try{
-                    console.log("Set Identity Object")
+                    //console.log("Set Identity Object")
                     this.connection.identity = await this.connection.platform.identities.get(identity);
-                    console.log("Identity Object: ", this.connection.identity);
+                    //console.log("Identity Object: ", this.connection.identity);
                 }catch(e) {
                     console.log("Error while get Identity Object", e);
                 }
@@ -153,9 +151,9 @@ export class PasswordManager{
             console.log("Index: ", encryptedPassword.data.index);
             let masterKey = keyManager.getHDWalletHardendKey(this.mnemonic, "", encryptedPassword.data.index, 1, Dash);
             let encKey = pwdManager.getKey(masterKey, crypto);
-            console.log("Encryptionkey: ", encKey);
+            //console.log("Encryptionkey: ", encKey);
 
-            console.log("Authentication Tag: ", encryptedPassword.data.authenticationTag);
+            //console.log("Authentication Tag: ", encryptedPassword.data.authenticationTag);
 
             let decPayload: any = pwdManager.fileLevelDecrytion(
                 encKey,
@@ -164,8 +162,8 @@ export class PasswordManager{
                 encryptedPassword.data.inputVector,
                 crypto);
 
-            console.log(decPayload);
-            console.log();
+            //console.log(decPayload);
+            //console.log();
             passwordsDecrypted.push(decPayload);
         }
 
@@ -236,15 +234,15 @@ export class PasswordManager{
         let privateKey = "";
 
         if(!onlineFlag){
-            console.log("Local PrivKey")
+            //console.log("Local PrivKey")
             privateKey = keyManager.getHDWalletHardendKey(this.mnemonic, "", this.localIndex, onlineFlag, Dash);
         }else{
-            console.log("Drive PrivKey")
+            //console.log("Drive PrivKey")
             privateKey = keyManager.getHDWalletHardendKey(this.mnemonic, "", this.driveIndex, onlineFlag, Dash);
         }
 
-        console.log("private key");
-        console.log(privateKey);
+        //console.log("private key");
+        //console.log(privateKey);
         const symKey = pwdManager.getKey(privateKey, crypto);
         let payload = pwdManager.fileLevelEncrytion(symKey, JSON.stringify(entry), crypto);
 
@@ -253,8 +251,8 @@ export class PasswordManager{
         else
             payload.index = this.driveIndex;
 
-        console.log("Payload which is uploaded:");
-        console.log(payload);
+        //console.log("Payload which is uploaded:");
+        //console.log(payload);
         if (!onlineFlag) {
             //Store all new Entrys to Local Storage
             await Storage.set({

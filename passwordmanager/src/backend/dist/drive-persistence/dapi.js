@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteEntry = exports.createNewEntry = exports.getEntryByIndex = exports.getAllEntries = exports.getAllIdentities = exports.getIdentityBalance = exports.findIdentityByName = exports.createDpnsName = exports.topUpIdentity = exports.createIdentity = void 0;
 /* eslint-disable */
 var identityDAO_1 = require("./identityDAO");
 var passwordDAO_1 = require("./passwordDAO");

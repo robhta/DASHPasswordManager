@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getHDWalletHardendKey = void 0;
 //BIP32_PATH_ONLINE = "10116'/0'/" //10016' is used by trezor //Onlince Stoage Path
 //BIP32_PATH_OFFLINE = "10116'/1'/" //Offline Stoage Path, this is okey, because if we upload an Entry we delete the Local version and only hold a new Uploaded Version!
 var ENV_NETWORK = "testnet";
