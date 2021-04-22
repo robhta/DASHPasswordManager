@@ -7,7 +7,6 @@
 	
 - run inside your browser:
 	-
-	- TODO: Add Ionic installation
 	- you need a terminal or an IDE like webstom, where you have opened to projekt directory
 	- ``` cd passwordmanager/ ```
 	- ``` npm install ```
