@@ -7,7 +7,7 @@
 
 - first install ionic:
 	- 
-	- npm install -g @ionic/cli	 
+	- ``` npm install -g @ionic/cli	``` 
 
 - run inside your browser:
 	-
