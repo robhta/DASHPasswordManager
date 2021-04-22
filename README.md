@@ -138,8 +138,8 @@ Because of Assertion Error Bug you have to test the localstorage via GUI and the
 	- After restarting the app, the saved password should be seen.
 - Drive:
 	- Requirements: Mnemonic with identity!
-	- Go to ''' /backendCLI '''
-	- run npm install
-	- run node BackendCLI.js
+	- Go to ``` /backendCLI ```
+	- run ``` npm install ```
+	- run ``` node BackendCLI.js ```
 	- When 502 Error while uploading, please restart the CLI
 </details>
