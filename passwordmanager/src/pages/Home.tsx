@@ -86,6 +86,7 @@ export class Home extends React.Component{
 
 
     async callbackParentPasswordDelete(index: number){
+        console.log("delete password");
         await PasswordManager.deletePasswordFromDrive(index);
 
         this.entries = this.entries.filter(function(item, i){

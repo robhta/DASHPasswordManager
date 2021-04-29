@@ -36,6 +36,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.getIdentityBalance = exports.findIdentityByName = exports.createDpnsName = exports.topUpIdentity = exports.getAllIdentities = exports.createIdentity = void 0;
 /* eslint-disable */
 /**
  * Create a new identity

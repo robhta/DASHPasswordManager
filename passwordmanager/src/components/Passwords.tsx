@@ -61,7 +61,6 @@ export class Passwords extends React.Component<IPasswordsProps> {
     }
 
     test(element: any){
-        console.log(element);
     }
 
     render() {
