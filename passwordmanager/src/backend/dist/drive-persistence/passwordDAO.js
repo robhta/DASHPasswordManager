@@ -36,6 +36,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.deleteEntry = exports.createNewEntry = exports.getEntryByIndex = exports.getAllEntries = void 0;
 /**
  * Get all encrypted passwords
  * @param connection

@@ -220,7 +220,15 @@ export class PasswordManager{
      * @param index
      */
     async deletePasswordFromDrive(index: number){
-        await dapi.deleteEntry(this.connection, index);
+        //await dapi.deleteEntry(this.connection, index);
+
+        let keys: any;
+        keys = await Storage.keys();
+
+        let key = keys.keys[index];
+
+        await Storage.remove({ key: key });
+        console.log("Removed key: ", key);
     }
 
 
