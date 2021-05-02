@@ -24,4 +24,4 @@ export declare function createNewEntry(connection: any, entry: any): Promise<any
  * @param index
  * @returns {Promise<void>}
  */
-export declare function deleteEntry(connection: any, index: number): Promise<void>;
+export declare function deleteEntry(connection: any, index: number): Promise<any>;

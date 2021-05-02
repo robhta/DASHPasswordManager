@@ -113,6 +113,21 @@ export class PasswordManager{
         console.log("finished init dash backend");
     }
 
+    async initLocalPasswordIndex(){
+        console.log("Start calculating local storage index")
+        let keys: any;
+        keys = await Storage.keys();
+
+        for(let i = 0; i < keys.keys.length; i++){
+            if(this.localIndex < keys.keys[i])
+                this.localIndex = parseInt(keys.keys[i]);
+        }
+
+        console.log("Highest local storage index: ", this.localIndex);
+        this.localIndex++;
+        console.log("Set local storage index to: ", this.localIndex);
+    }
+
     async initDashPasswordIndex(){
         let passwords = [];
         passwords = await this.getAllDashPasswordsEncrypted();
@@ -122,9 +137,9 @@ export class PasswordManager{
 
         }
 
-        console.log("highest index: ", this.driveIndex);
+        console.log("highest dash index: ", this.driveIndex);
         this.driveIndex++;
-        console.log("set index to: ", this.driveIndex);
+        console.log("set dash index to: ", this.driveIndex);
 
     }
 
@@ -151,9 +166,6 @@ export class PasswordManager{
             console.log("Index: ", encryptedPassword.data.index);
             let masterKey = keyManager.getHDWalletHardendKey(this.mnemonic, "", encryptedPassword.data.index, 1, Dash);
             let encKey = pwdManager.getKey(masterKey, crypto);
-            //console.log("Encryptionkey: ", encKey);
-
-            //console.log("Authentication Tag: ", encryptedPassword.data.authenticationTag);
 
             let decPayload: any = pwdManager.fileLevelDecrytion(
                 encKey,
@@ -162,9 +174,10 @@ export class PasswordManager{
                 encryptedPassword.data.inputVector,
                 crypto);
 
-            //console.log(decPayload);
-            //console.log();
-            passwordsDecrypted.push(decPayload);
+            let decryptedPassword = JSON.parse(decPayload);
+            decryptedPassword.online = true;
+            decryptedPassword.key = encryptedPassword.data.index;
+            passwordsDecrypted.push(decryptedPassword);
         }
 
         return passwordsDecrypted;
@@ -172,20 +185,19 @@ export class PasswordManager{
 
     /**
      * Loads and decrypts all local passwords
-     * TODO: improve localIndex generation
      */
     async getAllLocalPasswords() {
+        await this.initLocalPasswordIndex();
         console.log("start init the local storage");
         let keys: any;
 
         keys = await Storage.keys();
         console.log("Number of local passwords: ", keys.keys.length);
-        this.localIndex = keys.keys.length + 1; //Start at an empty index
 
         let entries = [];
 
-        for (let index in keys.keys) {
-            let tmpIndex = parseInt(index) + 1;
+        for (let i = 0; i < keys.keys.length; i++) {
+            let tmpIndex = parseInt(keys.keys[i]);
             console.log("Loading index:", tmpIndex);
 
             let encryptedItem = await Storage.get({key: tmpIndex.toString()});
@@ -194,10 +206,7 @@ export class PasswordManager{
                 let encryptedPayload = JSON.parse(encryptedItem.value);
 
                 let masterKey = keyManager.getHDWalletHardendKey(this.mnemonic, "", tmpIndex, 0, Dash);
-                console.log(masterKey)
-
                 let encKey = pwdManager.getKey(masterKey, crypto);
-                console.log(encKey)
 
                 let decPayload: any = pwdManager.fileLevelDecrytion(
                     encKey,
@@ -205,10 +214,11 @@ export class PasswordManager{
                     Buffer.from(encryptedPayload.authTag),
                     Buffer.from(encryptedPayload.iv),
                     crypto);
-                console.log("decripted Payload");
 
-                console.log(JSON.parse(decPayload));
-                entries.push(JSON.parse(decPayload));
+                let decryptedPassword = JSON.parse(decPayload);
+                decryptedPassword.online = false;
+                decryptedPassword.key = tmpIndex;
+                entries.push(decryptedPassword);
             }
         }
         return entries;
@@ -217,18 +227,19 @@ export class PasswordManager{
 
     /**
      *
-     * @param index
+     * @param entry
      */
-    async deletePasswordFromDrive(index: number){
+    async deletePassword(entry: any){
         //await dapi.deleteEntry(this.connection, index);
+        console.log("Start deleting: ")
+        console.log(entry);
 
-        let keys: any;
-        keys = await Storage.keys();
-
-        let key = keys.keys[index];
-
-        await Storage.remove({ key: key });
-        console.log("Removed key: ", key);
+        if(!entry.online){
+            await Storage.remove({ key: entry.key });
+            console.log("Removed key: ", entry.key);
+        }else if(entry.online){
+            console.log(await dapi.deleteEntry(this.connection, entry.key));
+        }
     }
 
 

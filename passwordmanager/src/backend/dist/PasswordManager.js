@@ -183,6 +183,28 @@ var PasswordManager = /** @class */ (function () {
             });
         });
     };
+    PasswordManager.prototype.initLocalPasswordIndex = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var keys, i;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        console.log("Start calculating local storage index");
+                        return [4 /*yield*/, Storage.keys()];
+                    case 1:
+                        keys = _a.sent();
+                        for (i = 0; i < keys.keys.length; i++) {
+                            if (this.localIndex < keys.keys[i])
+                                this.localIndex = parseInt(keys.keys[i]);
+                        }
+                        console.log("Highest local storage index: ", this.localIndex);
+                        this.localIndex++;
+                        console.log("Set local storage index to: ", this.localIndex);
+                        return [2 /*return*/];
+                }
+            });
+        });
+    };
     PasswordManager.prototype.initDashPasswordIndex = function () {
         return __awaiter(this, void 0, void 0, function () {
             var passwords, i;
@@ -197,9 +219,9 @@ var PasswordManager = /** @class */ (function () {
                             if (passwords[i].data.index > this.driveIndex)
                                 this.driveIndex = passwords[i].data.index;
                         }
-                        console.log("highest index: ", this.driveIndex);
+                        console.log("highest dash index: ", this.driveIndex);
                         this.driveIndex++;
-                        console.log("set index to: ", this.driveIndex);
+                        console.log("set dash index to: ", this.driveIndex);
                         return [2 /*return*/];
                 }
             });
@@ -222,7 +244,7 @@ var PasswordManager = /** @class */ (function () {
     };
     PasswordManager.prototype.getAllDashPasswords = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var passwordsEncrypted, passwordsDecrypted, i, encryptedPassword, payload, masterKey, encKey, decPayload;
+            var passwordsEncrypted, passwordsDecrypted, i, encryptedPassword, payload, masterKey, encKey, decPayload, decryptedPassword;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -240,9 +262,10 @@ var PasswordManager = /** @class */ (function () {
                             masterKey = keyManager.getHDWalletHardendKey(this.mnemonic, "", encryptedPassword.data.index, 1, Dash);
                             encKey = pwdManager.getKey(masterKey, crypto);
                             decPayload = pwdManager.fileLevelDecrytion(encKey, payload, encryptedPassword.data.authenticationTag, encryptedPassword.data.inputVector, crypto);
-                            //console.log(decPayload);
-                            //console.log();
-                            passwordsDecrypted.push(decPayload);
+                            decryptedPassword = JSON.parse(decPayload);
+                            decryptedPassword.online = true;
+                            decryptedPassword.key = encryptedPassword.data.index;
+                            passwordsDecrypted.push(decryptedPassword);
                         }
                         return [2 /*return*/, passwordsDecrypted];
                 }
@@ -251,72 +274,76 @@ var PasswordManager = /** @class */ (function () {
     };
     /**
      * Loads and decrypts all local passwords
-     * TODO: improve localIndex generation
      */
     PasswordManager.prototype.getAllLocalPasswords = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var keys, entries, _a, _b, _i, index, tmpIndex, encryptedItem, encryptedPayload, masterKey, encKey, decPayload;
-            return __generator(this, function (_c) {
-                switch (_c.label) {
-                    case 0:
+            var keys, entries, i, tmpIndex, encryptedItem, encryptedPayload, masterKey, encKey, decPayload, decryptedPassword;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.initLocalPasswordIndex()];
+                    case 1:
+                        _a.sent();
                         console.log("start init the local storage");
                         return [4 /*yield*/, Storage.keys()];
-                    case 1:
-                        keys = _c.sent();
-                        console.log("Number of local passwords: ", keys.keys.length);
-                        this.localIndex = keys.keys.length + 1; //Start at an empty index
-                        entries = [];
-                        _a = [];
-                        for (_b in keys.keys)
-                            _a.push(_b);
-                        _i = 0;
-                        _c.label = 2;
                     case 2:
-                        if (!(_i < _a.length)) return [3 /*break*/, 5];
-                        index = _a[_i];
-                        tmpIndex = parseInt(index) + 1;
+                        keys = _a.sent();
+                        console.log("Number of local passwords: ", keys.keys.length);
+                        entries = [];
+                        i = 0;
+                        _a.label = 3;
+                    case 3:
+                        if (!(i < keys.keys.length)) return [3 /*break*/, 6];
+                        tmpIndex = parseInt(keys.keys[i]);
                         console.log("Loading index:", tmpIndex);
                         return [4 /*yield*/, Storage.get({ key: tmpIndex.toString() })];
-                    case 3:
-                        encryptedItem = _c.sent();
+                    case 4:
+                        encryptedItem = _a.sent();
                         if (typeof encryptedItem.value === "string") {
                             encryptedPayload = JSON.parse(encryptedItem.value);
                             masterKey = keyManager.getHDWalletHardendKey(this.mnemonic, "", tmpIndex, 0, Dash);
-                            console.log(masterKey);
                             encKey = pwdManager.getKey(masterKey, crypto);
-                            console.log(encKey);
                             decPayload = pwdManager.fileLevelDecrytion(encKey, encryptedPayload.payload, Buffer.from(encryptedPayload.authTag), Buffer.from(encryptedPayload.iv), crypto);
-                            console.log("decripted Payload");
-                            console.log(JSON.parse(decPayload));
-                            entries.push(JSON.parse(decPayload));
+                            decryptedPassword = JSON.parse(decPayload);
+                            decryptedPassword.online = false;
+                            decryptedPassword.key = tmpIndex;
+                            entries.push(decryptedPassword);
                         }
-                        _c.label = 4;
-                    case 4:
-                        _i++;
-                        return [3 /*break*/, 2];
-                    case 5: return [2 /*return*/, entries];
+                        _a.label = 5;
+                    case 5:
+                        i++;
+                        return [3 /*break*/, 3];
+                    case 6: return [2 /*return*/, entries];
                 }
             });
         });
     };
     /**
      *
-     * @param index
+     * @param entry
      */
-    PasswordManager.prototype.deletePasswordFromDrive = function (index) {
+    PasswordManager.prototype.deletePassword = function (entry) {
         return __awaiter(this, void 0, void 0, function () {
-            var keys, key;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, Storage.keys()];
+            var _a, _b;
+            return __generator(this, function (_c) {
+                switch (_c.label) {
+                    case 0:
+                        //await dapi.deleteEntry(this.connection, index);
+                        console.log("Start deleting: ");
+                        console.log(entry);
+                        if (!!entry.online) return [3 /*break*/, 2];
+                        return [4 /*yield*/, Storage.remove({ key: entry.key })];
                     case 1:
-                        keys = _a.sent();
-                        key = keys.keys[index];
-                        return [4 /*yield*/, Storage.remove({ key: key })];
+                        _c.sent();
+                        console.log("Removed key: ", entry.key);
+                        return [3 /*break*/, 4];
                     case 2:
-                        _a.sent();
-                        console.log("Removed key: ", key);
-                        return [2 /*return*/];
+                        if (!entry.online) return [3 /*break*/, 4];
+                        _b = (_a = console).log;
+                        return [4 /*yield*/, dapi.deleteEntry(this.connection, entry.key)];
+                    case 3:
+                        _b.apply(_a, [_c.sent()]);
+                        _c.label = 4;
+                    case 4: return [2 /*return*/];
                 }
             });
         });
