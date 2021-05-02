@@ -13,19 +13,19 @@ export declare class PasswordManager {
      * @param mnemonic
      */
     setUpDash(mnemonic: string): Promise<void>;
+    initLocalPasswordIndex(): Promise<void>;
     initDashPasswordIndex(): Promise<void>;
     getAllDashPasswordsEncrypted(): Promise<any>;
     getAllDashPasswords(): Promise<any[]>;
     /**
      * Loads and decrypts all local passwords
-     * TODO: improve localIndex generation
      */
     getAllLocalPasswords(): Promise<any[]>;
     /**
      *
-     * @param index
+     * @param entry
      */
-    deletePasswordFromDrive(index: number): Promise<void>;
+    deletePassword(entry: any): Promise<void>;
     /**
      * Encrypt the password and save it to Drive or Localstorage
      * @param entry

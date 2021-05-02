@@ -28,7 +28,16 @@ export async function getAllEntries(connection: any) : Promise<any>{
  * @returns {Promise<void>}
  */
 export async function getEntryByIndex(connection: any, index: number): Promise<any>{
+    const platform = connection.platform;
 
+    // Retrieve the existing document
+    const [document] = await platform.documents.get(
+        'passwordManager.passwordmanager',
+        { where: [['$ownerId', '==', connection.identity.getId().toString()],
+                ['index', '==', index]] },
+    );
+
+    return document;
 }
 
 /**
@@ -81,5 +90,14 @@ export async function createNewEntry(connection: any, entry: any): Promise<any>{
  * @returns {Promise<void>}
  */
 export async function deleteEntry(connection: any, index: number){
+    const platform = connection.platform;
 
+    // Retrieve the existing document
+    const [document] = await platform.documents.get(
+        'passwordManager.passwordmanager',
+        { where: [['$ownerId', '==', connection.identity.getId().toString()],
+                    ['index', '==', index]] },
+    );
+
+    return platform.documents.broadcast({ delete: [document] }, connection.identity);
 }

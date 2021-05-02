@@ -75,8 +75,17 @@ exports.getAllEntries = getAllEntries;
  */
 function getEntryByIndex(connection, index) {
     return __awaiter(this, void 0, void 0, function () {
+        var platform, document;
         return __generator(this, function (_a) {
-            return [2 /*return*/];
+            switch (_a.label) {
+                case 0:
+                    platform = connection.platform;
+                    return [4 /*yield*/, platform.documents.get('passwordManager.passwordmanager', { where: [['$ownerId', '==', connection.identity.getId().toString()],
+                                ['index', '==', index]] })];
+                case 1:
+                    document = (_a.sent())[0];
+                    return [2 /*return*/, document];
+            }
         });
     });
 }
@@ -134,8 +143,17 @@ exports.createNewEntry = createNewEntry;
  */
 function deleteEntry(connection, index) {
     return __awaiter(this, void 0, void 0, function () {
+        var platform, document;
         return __generator(this, function (_a) {
-            return [2 /*return*/];
+            switch (_a.label) {
+                case 0:
+                    platform = connection.platform;
+                    return [4 /*yield*/, platform.documents.get('passwordManager.passwordmanager', { where: [['$ownerId', '==', connection.identity.getId().toString()],
+                                ['index', '==', index]] })];
+                case 1:
+                    document = (_a.sent())[0];
+                    return [2 /*return*/, platform.documents.broadcast({ delete: [document] }, connection.identity)];
+            }
         });
     });
 }

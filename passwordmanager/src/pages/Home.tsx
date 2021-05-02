@@ -37,8 +37,8 @@ export class Home extends React.Component{
 
 
         // Dummi-Data
-        this.entries = [
-        ];
+        this.entries = new Array<any>();
+        this.entries.pop();
 
         //Binding functions to this component
         this.callbackParentLogin = this.callbackParentLogin.bind(this);
@@ -54,16 +54,24 @@ export class Home extends React.Component{
      * Load all local passwords for rendering
      */
     async initLocalStorage(){
-       this.entries = await PasswordManager.getAllLocalPasswords();
+        this.entries = await PasswordManager.getAllLocalPasswords();
         console.log(this.entries);
         this.forceUpdate();
-
-        console.log("local storage set up");
     }
 
 
-    async fetchingAllPasswords(){
-        console.log(await PasswordManager.getAllDashPasswords());
+    async initDashStorage(){
+        let passwords = await PasswordManager.getAllDashPasswords();
+
+        for(let i = 0; i < passwords.length; i++){
+            this.entries.push(passwords[i]);
+        }
+
+        console.log(this.entries);
+    }
+
+    updateWindows(){
+        this.forceUpdate();
     }
 
     // Callback functions for children -> parent communication
@@ -73,8 +81,17 @@ export class Home extends React.Component{
 
         this.forceUpdate();
 
-        PasswordManager.setUpDash(mnemonic).then(() => console.log("init dash finished"));
-        this.initLocalStorage().then(r => console.log("init local storage finished"));
+        PasswordManager.setUpDash(mnemonic).then(async () => {
+            console.log("Dash succesfully initialised. Start pulling passwords from Drive");
+            await this.initDashStorage();
+            console.log("Dash Passwords fetched and decrypted");
+            this.updateWindows();
+        });
+        this.initLocalStorage().then(r => {
+            this.updateWindows();
+            console.log("Localstorage initialisation finished");
+        });
+
     }
 
     callbackParentPasswords(){
@@ -87,7 +104,7 @@ export class Home extends React.Component{
 
     async callbackParentPasswordDelete(index: number){
         console.log("delete password");
-        await PasswordManager.deletePasswordFromDrive(index);
+        await PasswordManager.deletePassword(this.entries[index]);
 
         this.entries = this.entries.filter(function(item, i){
             return i !== index;
