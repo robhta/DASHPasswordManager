@@ -3,9 +3,9 @@ const Dash = require('dash');
 const clientOpts = {
     network: 'testnet',
     wallet: {
-        mnemonic: 'transfer spend faint people art move please sock urban thank enlist obvious',
+        mnemonic: 'erase window crazy palm royal tornado loud wall shock finish tool knife',
         unsafeOptions: {
-            skipSynchronizationBeforeHeight: 415000, // only sync from start of 2021
+            skipSynchronizationBeforeHeight: 500000, // only sync from mid-2021
         },
     },
 };

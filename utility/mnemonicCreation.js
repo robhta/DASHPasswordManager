@@ -1,3 +1,4 @@
+
 const Dash = require('dash');
 
 const clientOpts = {

@@ -2,9 +2,9 @@ const Dash = require('dash');
 
 const clientOpts = {
     wallet: {
-        mnemonic: 'transfer spend faint people art move please sock urban thank enlist obvious',
+        mnemonic: 'erase window crazy palm royal tornado loud wall shock finish tool knife',
         unsafeOptions: {
-            skipSynchronizationBeforeHeight: 415000, // only sync from start of 2021
+            skipSynchronizationBeforeHeight: 500000, // only sync from start of 2021
         },
     },
 };
@@ -12,10 +12,11 @@ const client = new Dash.Client(clientOpts);
 
 const registerContract = async () => {
     const { platform } = client;
-    const identity = await platform.identities.get('DpicaA1QgjKGRC2vVQeMLL1rHqPztPcvSqBRUQU892DV');
+    const identity = await platform.identities.get('H4tzQ1rqnYGHsAx4enYDGRuAQdpZABnoZPUGDAVgQAq2');
 
     const contractDocuments = {
         "passwordmanager": {
+            "type": "object",
             "indices": [
                 {
                     "properties": [
@@ -64,6 +65,7 @@ const registerContract = async () => {
     console.dir({ contract });
 
     // Make sure contract passes validation checks
+    await platform.dpp.initialize();
     const validationResult = await platform.dpp.dataContract.validate(contract);
 
     if (validationResult.isValid()) {

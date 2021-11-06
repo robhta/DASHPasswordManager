@@ -93,14 +93,14 @@ var PasswordManager = /** @class */ (function () {
                             wallet: {
                                 mnemonic: mnemonic,
                                 unsafeOptions: {
-                                    skipSynchronizationBeforeHeight: 415000,
+                                    skipSynchronizationBeforeHeight: 500000, // only sync from start of 2021
                                 },
                             },
                             apps: {
                                 passwordManager: {
-                                    contractId: '81gBTTGijJu2oh3bj6bby9vgvTDuH8qh6jU2tkGiufRc'
+                                    contractId: '3QEvxGut8XNiKP7TsFH96bprHSBoY37Brm6KtK1PJRPK'
                                 },
-                            },
+                            }
                         };
                         this.client = new Dash.Client(clientOpts);
                         console.log("start fetching all identities");
