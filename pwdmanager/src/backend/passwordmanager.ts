@@ -37,6 +37,7 @@ export class PasswordManager {
 
     public async init() {
         this.decryptedPasswords = await this.getAllDashPasswords();
+        console.log(JSON.stringify(this.decryptedPasswords));
         this.setNextIndex();
     }
 
@@ -79,9 +80,12 @@ export class PasswordManager {
 
         const payloadEncrypted = this.encryption.fileLevelEncryption(encryptionKey, JSON.stringify(entry));
         payloadEncrypted.index = this.nextIndex;
-        this.nextIndex++;
 
         await this.dashAdapter.createPassword(payloadEncrypted, this.dashIdentity);
+        entry.key = this.nextIndex;
+        this.decryptedPasswords.push(entry);
+
+        this.nextIndex++;
     }
 
     public test(entry: PasswordEntry) {
@@ -109,5 +113,26 @@ export class PasswordManager {
         decryptedPassword.key = 100;
         
         console.log(JSON.stringify(payloadDecrypted));
+    }
+
+    public getPasswordEntries(): PasswordEntry[] {
+        return this.decryptedPasswords;
+    }
+
+    public async deletePasswordEntry(entry: PasswordEntry) {
+        await this.dashAdapter.deletePassword(entry.key, this.dashIdentity);
+        this.decryptedPasswords = this.decryptedPasswords.filter(password => {
+            password.key !== entry.key;
+        });
+    }
+
+    public async updatePasswordEntry(entry: PasswordEntry) {
+        const privateKey = this.keyGenerator.getHDWalletHardendKey(this.mnemonic, "", entry.key);
+        const encryptionKey = this.encryption.getKey(privateKey);
+
+        const payloadEncrypted = this.encryption.fileLevelEncryption(encryptionKey, JSON.stringify(entry));
+        payloadEncrypted.index = entry.key;
+
+        await this.dashAdapter.updatePassword(entry.key, this.dashIdentity, payloadEncrypted);
     }
 }

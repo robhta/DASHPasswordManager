@@ -22,6 +22,11 @@ class DashAdapter {
                 mnemonic: mnemonic !== null && mnemonic !== void 0 ? mnemonic : null,
                 offlineMode: false,
             },
+            apps: {
+                passwordmanager: {
+                    contractId: '7h2qW8LKXsU4NdvB8R4ZCpG36qMHpFQfeyPEgH62Q5bA'
+                }
+            }
         });
     }
     getAllIdentities() {
@@ -38,7 +43,7 @@ class DashAdapter {
     getAllPasswords(identity) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const documents = yield this.dashClient.platform.documents.get('passwordManager.passwordmanager', {
+                const documents = yield this.dashClient.platform.documents.get('passwordmanager.passwordmanager', {
                     where: [
                         ['$ownerId', "==", identity]
                     ],
@@ -53,7 +58,7 @@ class DashAdapter {
     }
     getPasswordByIndex(index, identity) {
         return __awaiter(this, void 0, void 0, function* () {
-            const [document] = yield this.dashClient.platform.documents.get('passwordManager.passwordmanager', { where: [['$ownerId', '==', identity],
+            const [document] = yield this.dashClient.platform.documents.get('passwordmanager.passwordmanager', { where: [['$ownerId', '==', identity],
                     ['index', '==', index]] });
             return document;
         });
@@ -69,11 +74,11 @@ class DashAdapter {
             try {
                 const platform = this.dashClient.platform;
                 const identityResolved = yield this.getIdentity(identity);
-                const document = yield platform.documents.create('passwordManager.passwordmanager', identityResolved, doc_properties);
+                const document = yield platform.documents.create('passwordmanager.passwordmanager', identityResolved, doc_properties);
                 const documentBatch = {
                     create: [document],
                 };
-                return yield platform.documents.broadcast(documentBatch, identity);
+                return yield platform.documents.broadcast(documentBatch, identityResolved);
             }
             catch (e) {
                 console.log(e);
@@ -85,7 +90,7 @@ class DashAdapter {
             const platform = this.dashClient.platform;
             const identityResolved = yield this.getIdentity(identity);
             // Retrieve the existing document
-            const [document] = yield platform.documents.get('passwordManager.passwordmanager', {
+            const [document] = yield platform.documents.get('passwordmanager.passwordmanager', {
                 where: [
                     ['$ownerId', '==', identity],
                     ['index', '==', index]
@@ -94,6 +99,25 @@ class DashAdapter {
             return yield platform.documents.broadcast({
                 delete: [document]
             }, identityResolved);
+        });
+    }
+    updatePassword(index, identity, entity) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { platform } = this.dashClient;
+            const identityResolved = yield this.getIdentity(identity);
+            // Retrieve the existing document
+            const [document] = yield this.dashClient.platform.documents.get('passwordmanager.passwordmanager', {
+                where: [
+                    ['$ownerId', '==', identity],
+                    ['index', '==', index]
+                ]
+            });
+            // Update document
+            document.set('payload', Buffer.from(entity.payload));
+            document.set('inputVector', entity.iv);
+            document.set('authenticationTag', entity.authTag);
+            // Sign and submit the document replace transition
+            return platform.documents.broadcast({ replace: [document] }, identityResolved);
         });
     }
 }

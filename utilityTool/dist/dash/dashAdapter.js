@@ -60,7 +60,7 @@ class DashAdapter {
     topupIdentity(identity) {
         return __awaiter(this, void 0, void 0, function* () {
             const identityId = identity;
-            const topUpAmount = 1000;
+            const topUpAmount = 100000;
             yield this.dashClient.platform.identities.topUp(identityId, topUpAmount);
             return this.dashClient.platform.identities.get(identityId);
         });

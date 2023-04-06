@@ -34,6 +34,7 @@ class PasswordManager {
     init() {
         return __awaiter(this, void 0, void 0, function* () {
             this.decryptedPasswords = yield this.getAllDashPasswords();
+            console.log(JSON.stringify(this.decryptedPasswords));
             this.setNextIndex();
         });
     }
@@ -67,8 +68,10 @@ class PasswordManager {
             const encryptionKey = this.encryption.getKey(privateKey);
             const payloadEncrypted = this.encryption.fileLevelEncryption(encryptionKey, JSON.stringify(entry));
             payloadEncrypted.index = this.nextIndex;
-            this.nextIndex++;
             yield this.dashAdapter.createPassword(payloadEncrypted, this.dashIdentity);
+            entry.key = this.nextIndex;
+            this.decryptedPasswords.push(entry);
+            this.nextIndex++;
         });
     }
     test(entry) {
@@ -84,6 +87,26 @@ class PasswordManager {
         const decryptedPassword = JSON.parse(payloadDecrypted);
         decryptedPassword.key = 100;
         console.log(JSON.stringify(payloadDecrypted));
+    }
+    getPasswordEntries() {
+        return this.decryptedPasswords;
+    }
+    deletePasswordEntry(entry) {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.dashAdapter.deletePassword(entry.key, this.dashIdentity);
+            this.decryptedPasswords = this.decryptedPasswords.filter(password => {
+                password.key !== entry.key;
+            });
+        });
+    }
+    updatePasswordEntry(entry) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const privateKey = this.keyGenerator.getHDWalletHardendKey(this.mnemonic, "", entry.key);
+            const encryptionKey = this.encryption.getKey(privateKey);
+            const payloadEncrypted = this.encryption.fileLevelEncryption(encryptionKey, JSON.stringify(entry));
+            payloadEncrypted.index = entry.key;
+            yield this.dashAdapter.updatePassword(entry.key, this.dashIdentity, payloadEncrypted);
+        });
     }
 }
 exports.PasswordManager = PasswordManager;

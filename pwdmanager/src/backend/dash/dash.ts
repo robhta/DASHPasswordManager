@@ -12,6 +12,11 @@ export class DashAdapter {
                 mnemonic: mnemonic ?? null,
                 offlineMode: false,
             },
+            apps: {
+                passwordmanager: {
+                    contractId: '7h2qW8LKXsU4NdvB8R4ZCpG36qMHpFQfeyPEgH62Q5bA'
+                }
+            }
         });
     }
 
@@ -27,7 +32,7 @@ export class DashAdapter {
     public async getAllPasswords(identity: string) {
         try {
             const documents = await this.dashClient.platform.documents.get(
-                'passwordManager.passwordmanager',
+                'passwordmanager.passwordmanager',
                 {
                     where: [
                         ['$ownerId', "==", identity]
@@ -44,7 +49,7 @@ export class DashAdapter {
 
     public async getPasswordByIndex(index: number, identity: string) {
         const [document] = await this.dashClient.platform.documents.get(
-            'passwordManager.passwordmanager',
+            'passwordmanager.passwordmanager',
             { where: [['$ownerId', '==', identity],
                     ['index', '==', index]] },
         );
@@ -64,7 +69,7 @@ export class DashAdapter {
             const platform = this.dashClient.platform;
             const identityResolved = await this.getIdentity(identity);
             const document = await platform.documents.create(
-                'passwordManager.passwordmanager',
+                'passwordmanager.passwordmanager',
                 identityResolved,
                 doc_properties,
             );
@@ -73,7 +78,7 @@ export class DashAdapter {
                 create: [document],
             }
 
-            return await platform.documents.broadcast(documentBatch, identity);
+            return await platform.documents.broadcast(documentBatch, identityResolved);
         } catch (e) {
             console.log(e);
         }
@@ -85,7 +90,7 @@ export class DashAdapter {
 
         // Retrieve the existing document
         const [document] = await platform.documents.get(
-            'passwordManager.passwordmanager',
+            'passwordmanager.passwordmanager',
             { 
                 where: [
                     ['$ownerId', '==', identity],
@@ -97,5 +102,29 @@ export class DashAdapter {
         return await platform.documents.broadcast({
             delete: [document]
         }, identityResolved);
+    }
+
+    public async updatePassword(index: number, identity: string, entity: EncryptedEntity) {
+        const { platform } = this.dashClient;
+        const identityResolved = await this.getIdentity(identity);
+      
+        // Retrieve the existing document
+        const [document] = await this.dashClient.platform.documents.get(
+          'passwordmanager.passwordmanager',
+          {
+            where: [
+                ['$ownerId', '==', identity],
+                ['index', '==', index]
+            ] 
+          },
+        );
+      
+        // Update document
+        document.set('payload', Buffer.from(entity.payload));
+        document.set('inputVector', entity.iv);
+        document.set('authenticationTag', entity.authTag);
+      
+        // Sign and submit the document replace transition
+        return platform.documents.broadcast({ replace: [document] }, identityResolved);
     }
 }

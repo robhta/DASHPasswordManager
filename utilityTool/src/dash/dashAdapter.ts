@@ -46,7 +46,7 @@ export class DashAdapter {
 
     public async topupIdentity(identity: string) {
         const identityId = identity;
-        const topUpAmount = 1000;
+        const topUpAmount = 100000;
 
         await this.dashClient.platform.identities.topUp(identityId, topUpAmount);
         return this.dashClient.platform.identities.get(identityId);
