@@ -56,13 +56,6 @@ class DashAdapter {
             }
         });
     }
-    getPasswordByIndex(index, identity) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const [document] = yield this.dashClient.platform.documents.get('passwordmanager.passwordmanager', { where: [['$ownerId', '==', identity],
-                    ['index', '==', index]] });
-            return document;
-        });
-    }
     createPassword(entity, identity) {
         return __awaiter(this, void 0, void 0, function* () {
             const doc_properties = {

@@ -37,7 +37,6 @@ export class PasswordManager {
 
     public async init() {
         this.decryptedPasswords = await this.getAllDashPasswords();
-        console.log(JSON.stringify(this.decryptedPasswords));
         this.setNextIndex();
     }
 
@@ -122,7 +121,7 @@ export class PasswordManager {
     public async deletePasswordEntry(entry: PasswordEntry) {
         await this.dashAdapter.deletePassword(entry.key, this.dashIdentity);
         this.decryptedPasswords = this.decryptedPasswords.filter(password => {
-            password.key !== entry.key;
+            return password.key !== entry.key;
         });
     }
 
@@ -134,5 +133,11 @@ export class PasswordManager {
         payloadEncrypted.index = entry.key;
 
         await this.dashAdapter.updatePassword(entry.key, this.dashIdentity, payloadEncrypted);
+
+        this.decryptedPasswords = this.decryptedPasswords.filter(password => {
+            return password.key !== entry.key;
+        });
+
+        this.decryptedPasswords.push(entry);
     }
 }

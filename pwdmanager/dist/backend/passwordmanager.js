@@ -34,7 +34,6 @@ class PasswordManager {
     init() {
         return __awaiter(this, void 0, void 0, function* () {
             this.decryptedPasswords = yield this.getAllDashPasswords();
-            console.log(JSON.stringify(this.decryptedPasswords));
             this.setNextIndex();
         });
     }
@@ -95,7 +94,7 @@ class PasswordManager {
         return __awaiter(this, void 0, void 0, function* () {
             yield this.dashAdapter.deletePassword(entry.key, this.dashIdentity);
             this.decryptedPasswords = this.decryptedPasswords.filter(password => {
-                password.key !== entry.key;
+                return password.key !== entry.key;
             });
         });
     }
@@ -106,6 +105,10 @@ class PasswordManager {
             const payloadEncrypted = this.encryption.fileLevelEncryption(encryptionKey, JSON.stringify(entry));
             payloadEncrypted.index = entry.key;
             yield this.dashAdapter.updatePassword(entry.key, this.dashIdentity, payloadEncrypted);
+            this.decryptedPasswords = this.decryptedPasswords.filter(password => {
+                return password.key !== entry.key;
+            });
+            this.decryptedPasswords.push(entry);
         });
     }
 }

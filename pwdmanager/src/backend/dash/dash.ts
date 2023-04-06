@@ -47,16 +47,6 @@ export class DashAdapter {
         }
     }
 
-    public async getPasswordByIndex(index: number, identity: string) {
-        const [document] = await this.dashClient.platform.documents.get(
-            'passwordmanager.passwordmanager',
-            { where: [['$ownerId', '==', identity],
-                    ['index', '==', index]] },
-        );
-    
-        return document;
-    }
-
     public async createPassword(entity: EncryptedEntity, identity: string) {
         const doc_properties = {
             index: entity.index,
