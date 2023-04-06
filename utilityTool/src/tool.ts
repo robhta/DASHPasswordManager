@@ -16,8 +16,13 @@ const lowOptions = [
   { value: 'mnemonic', title: 'Show mnemonic'},
   { value: 'fund', title: 'Show fund' },
   { value: 'name', title: 'Get identity of name' },
-  { value: 'identity', title: 'Get identity' }
+  { value: 'identity', title: 'Get identity' },
+  { value: 'passwordmanager', title: 'Configure passwordmanager' }
 ];
+
+const passwordOptions = [
+  { value: 'createContract', title: 'Create contract' }
+]
 
 async function getOneIdentity(gateway: Gateway): Promise<string> {
   const identites: string[] = await gateway.getAllIdentities();
@@ -112,6 +117,20 @@ async function enterString(message: string): Promise<string> {
           const identityByName = await enterString('Enter name of identity');
           await gateway.getIdentityByName(identityByName);
           break;
+        case 'passwordmanager':
+          const pwdResponse = await prompts({
+            type: 'select',
+            name: 'option',
+            message: 'What do you want:',
+            choices: passwordOptions,
+          });
+          switch(pwdResponse.option) {
+            case 'createContract':
+              const contractIdentity = await getOneIdentity(gateway);
+              await gateway.createPwdManagerContract(contractIdentity);
+              break;
+          }
+          break;
       }
 
       const continueResponse = await prompts({
@@ -124,8 +143,3 @@ async function enterString(message: string): Promise<string> {
     }
   }
 )();
-
-
-
-
-
