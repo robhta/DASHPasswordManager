@@ -56,4 +56,8 @@ export class Gateway {
     public async getIdentityByName(name: string) {
         console.log((await this.dashAdapter.getIdentityByName(name)).toJSON());
     }
+
+    public async createPwdManagerContract(identity: string) {
+        console.log((await this.dashAdapter.createPasswordManagerContract(identity)).toJSON());
+    }
 }

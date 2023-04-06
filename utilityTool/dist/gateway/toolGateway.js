@@ -72,5 +72,10 @@ class Gateway {
             console.log((yield this.dashAdapter.getIdentityByName(name)).toJSON());
         });
     }
+    createPwdManagerContract(identity) {
+        return __awaiter(this, void 0, void 0, function* () {
+            console.log((yield this.dashAdapter.createPasswordManagerContract(identity)).toJSON());
+        });
+    }
 }
 exports.Gateway = Gateway;

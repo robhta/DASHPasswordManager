@@ -28,7 +28,11 @@ const lowOptions = [
     { value: 'mnemonic', title: 'Show mnemonic' },
     { value: 'fund', title: 'Show fund' },
     { value: 'name', title: 'Get identity of name' },
-    { value: 'identity', title: 'Get identity' }
+    { value: 'identity', title: 'Get identity' },
+    { value: 'passwordmanager', title: 'Configure passwordmanager' }
+];
+const passwordOptions = [
+    { value: 'createContract', title: 'Create contract' }
 ];
 function getOneIdentity(gateway) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -116,6 +120,20 @@ function enterString(message) {
             case 'name':
                 const identityByName = yield enterString('Enter name of identity');
                 yield gateway.getIdentityByName(identityByName);
+                break;
+            case 'passwordmanager':
+                const pwdResponse = yield (0, prompts_1.default)({
+                    type: 'select',
+                    name: 'option',
+                    message: 'What do you want:',
+                    choices: passwordOptions,
+                });
+                switch (pwdResponse.option) {
+                    case 'createContract':
+                        const contractIdentity = yield getOneIdentity(gateway);
+                        yield gateway.createPwdManagerContract(contractIdentity);
+                        break;
+                }
                 break;
         }
         const continueResponse = yield (0, prompts_1.default)({
