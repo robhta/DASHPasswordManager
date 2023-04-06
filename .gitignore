@@ -16,6 +16,7 @@ log.txt
 # NPM (Node Package Manager) files
 npm-debug.log*
 node_modules/
+*node_modules/
 tmp/
 temp/
 
